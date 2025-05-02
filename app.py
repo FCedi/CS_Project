@@ -35,6 +35,9 @@ def get_location_from_zip(zip_code, country='CH'):
         return None, None
 
 # ---- Load model ----
+
+import os
+
 @st.cache_resource
 def load_model():
     if not os.path.exists("price_estimator.pkl"):
