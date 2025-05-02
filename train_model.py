@@ -17,3 +17,5 @@ model.fit(X, y)
 
 # Save in current Python version
 joblib.dump(model, "price_estimator.pkl")
+
+print("✅ Model trained and saved as price_estimator.pkl")
