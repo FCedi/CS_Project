@@ -1,5 +1,5 @@
 import numpy as np
-from sklearn.ensemble import RandomForestRegressor
+from scikit.learn import RandomForestRegressor
 import joblib
 
 # Dummy data for training (replace later with real data)
