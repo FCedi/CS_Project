@@ -3,6 +3,5 @@ requests
 folium
 streamlit-folium
 scikit-learn
-sklearn
 joblib
 numpy
