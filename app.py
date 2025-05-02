@@ -37,7 +37,7 @@ def get_location_from_zip(zip_code, country='CH'):
 # ---- Load model ----
 @st.cache_resource
 def load_model():
-    return joblib.load("train_model.py")
+    return joblib.load("price_estimator.pkl")
 
 model = load_model()
 
