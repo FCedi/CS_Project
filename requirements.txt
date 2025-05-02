@@ -2,6 +2,6 @@ streamlit
 requests
 folium
 streamlit-folium
-scikit-learn
+scikit-learn==1.5.1
 joblib
 numpy
