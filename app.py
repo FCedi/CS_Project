@@ -37,6 +37,9 @@ def get_location_from_zip(zip_code, country='CH'):
 # ---- Load model ----
 @st.cache_resource
 def load_model():
+    if not os.path.exists("price_estimator.pkl"):
+        st.error("Model file not found. Please run train_model.py to generate the model.")
+        st.stop()
     return joblib.load("price_estimator.pkl")
 
 model = load_model()
