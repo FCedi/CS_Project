@@ -9,7 +9,7 @@ from sklearn.compose import ColumnTransformer
 from sklearn.metrics import mean_squared_error
 
 # ---- CONFIG ----
-city_files = ["geneve.csv", "lausanne.csv", "st.gallen.csv", "trüri.csv"]
+city_files = ["geneve.csv", "lausanne.csv", "st.gallen.csv", "zurich.csv"]
 
 # ---- Load and merge datasets ----
 dfs = []
