@@ -25,12 +25,14 @@ data = pd.concat(dfs, ignore_index=True)
 # Extract ZIP code
 data['zip_code'] = data['textLoadingClassname 3'].str.extract(r'(\d{4})')
 
-# Remove empty ZIP codes
-data = data[data['zip_code'].notnull()]
+# Convert to numeric and drop rows where ZIP is missing
+data['zip_code'] = pd.to_numeric(data['zip_code'], errors='coerce')
 
-# Convert ZIP code to numeric
-data['zip_code'] = data['zip_code'].astype(float)
+# Drop rows where ZIP is still NaN
+data = data.dropna(subset=['zip_code'])
 
+# Convert ZIP code to integer (optional but cleaner)
+data['zip_code'] = data['zip_code'].astype(int)
 
 # Clean and convert price
 data['price'] = (
