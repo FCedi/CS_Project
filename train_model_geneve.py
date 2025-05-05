@@ -9,7 +9,7 @@ from sklearn.compose import ColumnTransformer
 from sklearn.metrics import mean_squared_error
 
 # Load dataset
-df = pd.read_csv("genève.csv", encoding="latin1", sep=";")
+df = pd.read_csv("geneve.csv", encoding="latin1", sep=";")
 
 # Copy to avoid modifying original
 data = df.copy()
