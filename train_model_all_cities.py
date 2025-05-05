@@ -25,6 +25,13 @@ data = pd.concat(dfs, ignore_index=True)
 # Extract ZIP code
 data['zip_code'] = data['textLoadingClassname 3'].str.extract(r'(\d{4})')
 
+# Remove empty ZIP codes
+data = data[data['zip_code'].notnull()]
+
+# Convert ZIP code to numeric
+data['zip_code'] = data['zip_code'].astype(float)
+
+
 # Clean and convert price
 data['price'] = (
     data['textLoadingClassname 4']
