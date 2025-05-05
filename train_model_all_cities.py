@@ -25,14 +25,14 @@ data = pd.concat(dfs, ignore_index=True)
 # Extract ZIP code
 data['zip_code'] = data['textLoadingClassname 3'].str.extract(r'(\d{4})')
 
-# Convert to numeric and drop rows where ZIP is missing
+# Convert ZIP code to numeric, coercing errors (invalid ZIP → NaN)
 data['zip_code'] = pd.to_numeric(data['zip_code'], errors='coerce')
 
-# Drop rows where ZIP is still NaN
+# Drop rows with missing ZIP codes
 data = data.dropna(subset=['zip_code'])
 
-# Convert ZIP code to integer (optional but cleaner)
-data['zip_code'] = data['zip_code'].astype(int)
+# Convert ZIP code to float
+data['zip_code'] = data['zip_code'].astype(float)
 
 # Clean and convert price
 data['price'] = (
@@ -56,7 +56,7 @@ data['type'] = (
     .fillna('Apartment')
 )
 
-# Detect outdoor space
+# Detect outdoor space (optional)
 outdoor_keywords = ['balcony', 'terrace', 'garden', 'loggia', 'patio', 'roof terrace', 'veranda', 'outdoor']
 data['has_outdoor_space'] = data['textLoadingClassname 2'].str.contains(
     '|'.join(outdoor_keywords), flags=re.IGNORECASE, regex=True, na=False
@@ -68,11 +68,8 @@ data['modern'] = data['textLoadingClassname 2'].str.contains('modern', flags=re.
 data['parking_or_garage'] = data['textLoadingClassname 2'].str.contains('parking|garage', flags=re.IGNORECASE, regex=True, na=False).astype(int)
 data['renovation_needed'] = data['textLoadingClassname 2'].str.contains('renovation needed', flags=re.IGNORECASE, regex=True, na=False).astype(int)
 
-# Drop rows with missing required values
-data.dropna(subset=['zip_code', 'price', 'rooms', 'size', 'type'], inplace=True)
-
-# Convert ZIP code to numeric
-data['zip_code'] = data['zip_code'].astype(float)
+# Drop rows with missing values in any of the required features
+data.dropna(subset=['price', 'rooms', 'size', 'type'], inplace=True)
 
 # ---- Model Training ----
 
