@@ -137,7 +137,7 @@ if st.session_state.page == "result":
     st.write(f"CHF {lower_bound:,} - CHF {upper_bound:,}")
     st.markdown(f"### ➡️ Estimated Price: **CHF {int(estimated_price):,}**")
 
-# Option for new entry
-if st.button("Estimate Another Property"):
-    st.session_state.page = "input"
-    st.experimental_rerun()
+    # Option for new entry
+    if st.button("Estimate Another Property"):
+        st.session_state.page = "input"
+        st.experimental_rerun()
