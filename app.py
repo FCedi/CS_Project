@@ -3,6 +3,7 @@ import requests
 import folium
 from streamlit_folium import st_folium
 import joblib
+import pandas as pd
 import numpy as np
 
 st.set_page_config(page_title="Swiss Real Estate Price Estimator", layout="wide")
@@ -112,8 +113,16 @@ if st.session_state.page == "result":
     elif st.session_state.parking == "Garage":
         parking_flag = 2
 
-    features = np.array([[float(st.session_state.zip_code), st.session_state.rooms, st.session_state.size,
-                          "Apartment", renovated_flag, parking_flag, outdoor_flag]])
+    # Create input DataFrame for prediction
+    features = pd.DataFrame([{
+        "ZIP": float(st.session_state.zip_code),
+        "number_of_rooms": st.session_state.rooms,
+        "square_meters": st.session_state.size,
+        "place_type": "Apartment",
+        "Is_Renovated_or_New": renovated_flag,
+        "Has_Parking": parking_flag,
+        "Has_Outdoor_Space": outdoor_flag
+    }])
 
     estimated_price = model.predict(features)[0]
     lower_bound = int(estimated_price * 0.9)
@@ -121,5 +130,4 @@ if st.session_state.page == "result":
 
     st.subheader("💰 Estimated Price Range")
     st.write(f"CHF {lower_bound:,} - CHF {upper_bound:,}")
-
     st.markdown(f"### ➡️ Estimated Price: **CHF {int(estimated_price):,}**")
