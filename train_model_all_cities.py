@@ -36,6 +36,7 @@ data['rent'] = pd.to_numeric(data['rent'], errors='coerce')
 # Drop rows with missing essential data
 required_columns = ['ZIP', 'number_of_rooms', 'square_meters', 'place_type', 'rent']
 data = data.dropna(subset=required_columns)
+print("Remaining rows after cleaning:", len(data))
 
 # ---- Feature Extraction from char.1 - char.3 ----
 
