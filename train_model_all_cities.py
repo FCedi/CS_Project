@@ -13,7 +13,7 @@ city_files = ["geneve.csv", "lausanne.csv", "st.gallen.csv", "zurich.csv"]
 # ---- Load and merge datasets ----
 dfs = []
 for file in city_files:
-    df = pd.read_csv(file, encoding="utf-8", sep=";")  # Adjust encoding if needed
+    df = pd.read_csv(file, encoding="latin1", sep=";")  # Adjust encoding if needed
     df["source_file"] = file
     dfs.append(df)
 
