@@ -5,125 +5,114 @@ from streamlit_folium import st_folium
 import joblib
 import numpy as np
 
-# ---- App Config ----
 st.set_page_config(page_title="Swiss Real Estate Price Estimator", layout="wide")
 st.title("🏡 Swiss Real Estate Price Estimator")
 
-st.markdown("""
-This program provides you with a comparable price for your rental unit if you want to rent out an apartment in **Geneva**, **Zürich**, **Lausanne**, or **St. Gallen**.
-
-Simply enter your property details below and get an instant estimated price range based on our data model.
+st.write("""
+This program provides you with a comparable price for your rental unit if you want to rent out your apartment or house in Geneva, Zürich, Lausanne, or St. Gallen.
 """)
 
-# ---- Load Model ----
+# ---- Helper function to get lat/lon from address ----
+@st.cache_data
+def get_location_from_address(address, country='CH'):
+    url = f"https://nominatim.openstreetmap.org/search?street={address}&country={country}&format=json"
+    response = requests.get(url, headers={'User-Agent': 'real-estate-app'})
+
+    if response.status_code != 200:
+        return None, None
+
+    data = response.json()
+    if data:
+        return float(data[0]['lat']), float(data[0]['lon'])
+    else:
+        return None, None
+
+# ---- Helper function to get lat/lon from zip ----
+@st.cache_data
+def get_location_from_zip(zip_code, country='CH'):
+    url = f"https://nominatim.openstreetmap.org/search?postalcode={zip_code}&country={country}&format=json"
+    response = requests.get(url, headers={'User-Agent': 'real-estate-app'})
+
+    if response.status_code != 200:
+        return None, None
+
+    data = response.json()
+    if data:
+        return float(data[0]['lat']), float(data[0]['lon'])
+    else:
+        return None, None
+
+# ---- Load model ----
 @st.cache_resource
 def load_model():
     return joblib.load("price_estimator.pkl")
 
 model = load_model()
 
-# ---- Helper function to get lat/lon from address ----
-@st.cache_data
-def get_location_from_address(address, country='CH'):
-    url = f"https://nominatim.openstreetmap.org/search?q={address}&country={country}&format=json"
-    response = requests.get(url, headers={'User-Agent': 'real-estate-app'})
-    
-    if response.status_code != 200:
-        return None, None
-    
-    data = response.json()
-    
-    if data:
-        return float(data[0]['lat']), float(data[0]['lon'])
-    else:
-        return None, None
-
-# ---- Property Input Form ----
+# ---- Get User Input ----
 with st.form("property_form"):
     st.subheader("Enter Property Details")
 
-    address = st.text_input("Property Address (Street, ZIP, City)")
+    street = st.text_input("Street and House Number")
     zip_code = st.text_input("ZIP Code", max_chars=10)
+    city = st.text_input("City")
+    
     size = st.number_input("Property Size (m²)", min_value=10, max_value=1000, value=100)
-    rooms = st.number_input("Number of Rooms", min_value=1, max_value=20, value=3)
+    rooms = st.number_input("Number of Rooms", min_value=1.0, max_value=20.0, step=0.5, value=3.0)
 
     # Outdoor space
-    has_outdoor_space = st.checkbox("Has Outdoor Space?")
-    outdoor_space_type = None
-    if has_outdoor_space:
-        outdoor_space_type = st.selectbox("Select Outdoor Space Type", ["Balcony", "Terrace", "Rooftop Terrace", "Garden"])
+    has_outdoor_space = st.radio("Does the property have outdoor space?", ["No", "Yes"])
+    outdoor_type = None
+    if has_outdoor_space == "Yes":
+        outdoor_type = st.selectbox("What type of outdoor space?", ["Balcony", "Terrace", "Roof Terrace", "Garden"])
 
-    # Renovation / Modern
-    renovated_or_new = st.checkbox("Is the property renovated or new?")
-    modern = st.checkbox("Is the property modern?")
-
-    # Parking / Garage
-    parking_or_garage = st.checkbox("Includes Parking or Garage?")
-
-    # Property type
-    property_type = st.selectbox("Property Type", ["Apartment", "House", "Duplex"])
+    # Renovated / Modern / Parking
+    is_renovated = st.radio("Is the property new or recently renovated (last 5 years)?", ["Yes", "No"])
+    is_modern = st.radio("Does the property have modern features (e.g. insulated windows or central heating, new kitchen/bathroom)?", ["Yes", "No"])
+    parking_type = st.selectbox("Does the property include a parking space?", ["No", "Parking Outdoor", "Garage"])
 
     submitted = st.form_submit_button("Estimate Price")
 
-# ---- Process Form Submission ----
+# ---- Process form submission ----
 if submitted:
-    if zip_code.strip() == "" or address.strip() == "":
-        st.error("Please enter both a valid address and ZIP code.")
+
+    if zip_code.strip() == "":
+        st.error("Please enter a valid ZIP code.")
     else:
-        lat, lon = get_location_from_address(address)
+        full_address = f"{street}, {zip_code} {city}"
+
+        lat, lon = get_location_from_address(full_address)
 
         if lat is None or lon is None:
-            st.error("Could not find location for the entered address.")
+            lat, lon = get_location_from_zip(zip_code)
+
+        if lat is None or lon is None:
+            st.error("Could not find location for the entered address or ZIP code.")
         else:
-            # Save form results to session state
-            st.session_state['result'] = {
-                'address': address,
-                'zip_code': zip_code,
-                'lat': lat,
-                'lon': lon,
-                'size': size,
-                'rooms': rooms,
-                'outdoor_space': has_outdoor_space,
-                'outdoor_type': outdoor_space_type,
-                'renovated_or_new': renovated_or_new,
-                'modern': modern,
-                'parking_or_garage': parking_or_garage,
-                'property_type': property_type
-            }
+            # Show map
+            st.subheader("📍 Property Location on Map")
+            m = folium.Map(location=[lat, lon], zoom_start=15)
+            folium.Marker([lat, lon], tooltip="Your Property").add_to(m)
+            st_folium(m, width=700)
 
-# ---- Display Results if Available ----
-if 'result' in st.session_state:
-    result = st.session_state['result']
+            # Prepare features
+            outdoor_space_flag = 1 if has_outdoor_space == "Yes" else 0
+            renovated_flag = 1 if is_renovated == "Yes" else 0
+            modern_flag = 1 if is_modern == "Yes" else 0
+            parking_flag = 0
+            if parking_type == "Parking Outdoor":
+                parking_flag = 1
+            elif parking_type == "Garage":
+                parking_flag = 2
 
-    st.subheader("📍 Property Location on Map")
-    m = folium.Map(location=[result['lat'], result['lon']], zoom_start=16)
-    folium.Marker([result['lat'], result['lon']], tooltip=result['address']).add_to(m)
-    st_folium(m, width=700)
+            # Predict price
+            st.subheader("📊 Estimated Price")
 
-    st.subheader("📊 Estimated Price")
+            features = np.array([[float(zip_code), rooms, size, "Apartment", renovated_flag, modern_flag, parking_flag, outdoor_space_flag]])
+            estimated_price = model.predict(features)[0]
 
-    # Prepare features
-    features = np.array([[
-        float(result['zip_code']),
-        result['rooms'],
-        result['size'],
-        result['property_type'],
-        int(result['renovated_or_new']),
-        int(result['modern']),
-        int(result['parking_or_garage']),
-        0  # renovation_needed, assumed 0 for this UI (or can make another checkbox later)
-    ]])
+            lower_bound = int(estimated_price * 0.9)
+            upper_bound = int(estimated_price * 1.1)
 
-    # Process property type manually (as model expects OneHotEncoder)
-    # → Let model pipeline handle encoding
-    estimated_price = model.predict(features)[0]
+            st.success(f"Estimated Price Range: CHF {lower_bound:,} - CHF {upper_bound:,}")
 
-    # Calculate price range (+- 10%)
-    lower_bound = int(estimated_price * 0.9)
-    upper_bound = int(estimated_price * 1.1)
-
-    st.success(f"Estimated Price Range: CHF {lower_bound:,} - CHF {upper_bound:,}")
-
-    # Summary
-    st.markdown("**Property Summary**")
-    st.write(result)
