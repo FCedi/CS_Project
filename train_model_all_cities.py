@@ -59,7 +59,7 @@ data['Has_Outdoor_Space'] = data.apply(lambda row: detect_feature(row, outdoor_k
 
 # Renovated / New / Modern
 modern_keywords = ["renovated", "new", "modern", "modern kitchen", "luxury"]
-data['Is_Modern_or_New'] = data.apply(lambda row: detect_feature(row, modern_keywords), axis=1)
+data['Is_Renovated_or_New'] = data.apply(lambda row: detect_feature(row, modern_keywords), axis=1)
 
 # Parking
 parking_keywords = ["parking", "garage"]
@@ -67,7 +67,7 @@ data['Has_Parking'] = data.apply(lambda row: detect_feature(row, parking_keyword
 
 # ---- Model Training ----
 
-X = data[['ZIP', 'number_of_rooms', 'square_meters', 'place_type', 'Is_Modern_or_New', 'Has_Parking', 'Has_Outdoor_Space']]
+X = data[['ZIP', 'number_of_rooms', 'square_meters', 'place_type', 'Is_Renovated_or_New', 'Has_Parking', 'Has_Outdoor_Space']]
 y = data['rent']
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
@@ -92,4 +92,3 @@ print(f"✅ Unified Model trained. RMSE: CHF {rmse:,.2f}")
 
 joblib.dump(model_pipeline, "price_estimator.pkl")
 print("📦 Model saved as 'price_estimator.pkl'")
-
