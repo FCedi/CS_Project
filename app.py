@@ -101,7 +101,12 @@ if st.session_state.page == "result":
     if lat and lon:
         st.subheader("📍 Location on Map")
         m = folium.Map(location=[lat, lon], zoom_start=15)
-        folium.Marker([lat, lon], tooltip="Property Location").add_to(m)
+        folium.Marker(
+            [lat, lon],
+            popup="Property Location",
+            tooltip="Property Location",
+            icon=folium.Icon(color="red", icon="home", prefix='fa')
+            ).add_to(m)
         st_folium(m, width=700)
 
     # Prepare features
@@ -131,3 +136,8 @@ if st.session_state.page == "result":
     st.subheader("💰 Estimated Price Range")
     st.write(f"CHF {lower_bound:,} - CHF {upper_bound:,}")
     st.markdown(f"### ➡️ Estimated Price: **CHF {int(estimated_price):,}**")
+
+# Option for new entry
+if st.button("Estimate Another Property"):
+    st.session_state.page = "input"
+    st.experimental_rerun()
