@@ -18,6 +18,9 @@ for file in city_files:
     dfs.append(df)
 
 data = pd.concat(dfs, ignore_index=True)
+print("Loaded rows:", len(data))
+print("Columns:", data.columns)
+print(data.head())
 
 # ---- Preprocessing ----
 
