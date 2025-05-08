@@ -5,6 +5,8 @@ from streamlit_folium import st_folium
 import joblib
 import pandas as pd
 import numpy as np
+import os
+import matplotlib.pyplot as plt
 
 st.set_page_config(page_title="Swiss Real Estate Price Estimator", layout="wide")
 
@@ -28,6 +30,23 @@ def get_location(address, zip_code, city, country='CH'):
     if data:
         return float(data[0]['lat']), float(data[0]['lon'])
     return None, None
+
+# Get average price per m2 per year from training csv files
+city_files = {
+    "Geneva": "geneve.csv",
+    "Lausanne": "lausanne.csv",
+    "Zurich": "zurich.csv",
+    "St. Gallen": "st.gallen.csv"
+}
+
+city_avg_p_sqm_y = {}
+
+for city, filename in city_files.items():
+    if os.path.exists(filename):
+        df = pd.read_csv(filename, encoding="latin1", sep=";")
+        df['p/squarem/y'] = pd.to_numeric(df['p/squarem/y'], errors='coerce')
+        avg = df['p/squarem/y'].mean()      # directly calculates the averag
+        city_avg_p_sqm_y[city] = round(avg, 2)
 
 # Checks for a session state (avoids reruns and errors when displaxint the results)
 # If nothing is found go to welcome page
@@ -70,7 +89,7 @@ if st.session_state.page == "input":
         is_renovated = st.radio("Is the property new or recently renovated (last 5 years)?", ["Yes", "No"])
         parking = st.selectbox("Does the property include a parking space?", ["No", "Parking Outdoor", "Garage"])
 
-        submitted = st.form_submit_button("Estimate Price")
+        submitted = st.form_submit_button("Estimate Rent")
 
     if submitted:
         # Save data to session and go to result page
@@ -141,6 +160,32 @@ if st.session_state.page == "result":
     st.write("💰 Estimated Price Range")
     st.write(f"CHF {lower_bound:,} - CHF {upper_bound:,}")
     st.markdown(f"### ➡️ Estimated Price: **CHF {int(estimated_price):,}**")
+
+    # Market price calculation with average price per m2 per year comparison
+    selected_city = st.session_state.city
+    market_price_m2_y = city_avg_p_sqm_y.get(selected_city, None)
+
+    if market_price_m2_y:
+
+        market_estimated_price = (market_price_m2_y / 12) * st.session_state.size
+
+        st.subheader("📊 Market Average Price (based on current listings)")
+        st.write(f"Market Avg Rent Estimate: CHF {int(market_estimated_price):,}")
+
+        # displays result in a box plot
+        st.subheader("📦 Estimated Price Comparison")
+
+        labels = ['Lower ML Estimate', 'Market Average', 'Upper ML Estimate']
+        values = [lower_bound, market_estimated_price, upper_bound]
+
+        fig, ax = plt.subplots()
+        ax.bar(labels, values, color=["gray", "blue", "gray"])
+        ax.set_ylabel("CHF")
+        ax.set_title("Rental Price Comparison")
+        st.pyplot(fig)
+    # happens whe  city is not in the training data
+    else:
+        st.warning("No market price data available for this city.")
 
     # Option for new entry, goes back to input page
     if st.button("Estimate Another Property"):
