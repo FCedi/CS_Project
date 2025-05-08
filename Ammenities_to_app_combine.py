@@ -1,3 +1,4 @@
 import streamlit as st
 
-st.write('succesfull launch of testapp')
+st.set_page_config(page_title='Local Amenities Finder', layout='centered')
+st.title('Local Amenities Finder')
