@@ -8,14 +8,15 @@ import numpy as np
 
 st.set_page_config(page_title="Swiss Real Estate Price Estimator", layout="wide")
 
-# ---- Load model ----
+# Load model (price estimator)
 @st.cache_resource
 def load_model():
     return joblib.load("price_estimator.pkl")
 
 model = load_model()
 
-# ---- Geocoding helper ----
+# OpenStreetMap API
+# gets latitude and longitude from address input
 @st.cache_data
 def get_location(address, zip_code, city, country='CH'):
     query = f"{address}, {zip_code} {city}, {country}"
@@ -28,14 +29,17 @@ def get_location(address, zip_code, city, country='CH'):
         return float(data[0]['lat']), float(data[0]['lon'])
     return None, None
 
-# ---- Session state ----
+# Checks for a session state (avoids reruns and errors when displaxint the results)
+# If nothing is found go to welcome page
 if "page" not in st.session_state:
     st.session_state.page = "welcome"
 
-# ---- WELCOME PAGE ----
+
+# WELCOME PAGE
 if st.session_state.page == "welcome":
     st.title("🏡 Swiss Real Estate Price Estimator")
-
+    
+    # display on the welcome page
     st.write("""
     This program provides you with a comparable price for your rental unit if you want to rent out your apartment or house in Geneva, Zürich, Lausanne, or St. Gallen.
     """)
@@ -44,7 +48,8 @@ if st.session_state.page == "welcome":
         st.session_state.page = "input"
         st.experimental_rerun()
 
-# ---- INPUT PAGE ----
+
+# INPUT PAGE
 if st.session_state.page == "input":
 
     st.title("Enter Property Details")
@@ -53,15 +58,14 @@ if st.session_state.page == "input":
 
         st.header("📍 Address")
         street = st.text_input("Street and House Number")
-        zip_code = st.text_input("ZIP Code", max_chars=10)
+        zip_code = st.text_input("ZIP Code", max_chars=4)
         city = st.text_input("City")
 
         st.header("🏠 Property Details")
-        size = st.number_input("Property Size (m²)", min_value=10, max_value=1000, value=100)
+        size = st.number_input("Property Size (m²)", min_value=10, max_value=1000, step=5, value=100)
         rooms = st.number_input("Number of Rooms", min_value=1.0, max_value=20.0, step=0.5, value=3.0)
 
         st.header("✨ Features")
-
         outdoor_space = st.selectbox("Outdoor Space", ["No", "Balcony", "Terrace", "Roof Terrace", "Garden"])
         is_renovated = st.radio("Is the property new or recently renovated (last 5 years)?", ["Yes", "No"])
         parking = st.selectbox("Does the property include a parking space?", ["No", "Parking Outdoor", "Garage"])
@@ -81,12 +85,13 @@ if st.session_state.page == "input":
         st.session_state.page = "result"
         st.experimental_rerun()
 
-# ---- RESULT PAGE ----
+
+# RESULT PAGE
 if st.session_state.page == "result":
 
     st.title("🏷️ Estimated Price")
 
-    # Show entered data
+    # Show entered data from input page
     st.subheader("Property Details")
     st.write(f"**Address:** {st.session_state.address}, {st.session_state.zip_code} {st.session_state.city}")
     st.write(f"**Size:** {st.session_state.size} m²")
@@ -95,7 +100,7 @@ if st.session_state.page == "result":
     st.write(f"**Recently Renovated:** {st.session_state.is_renovated}")
     st.write(f"**Parking:** {st.session_state.parking}")
 
-    # Get location
+    # Get location and show location
     lat, lon = get_location(st.session_state.address, st.session_state.zip_code, st.session_state.city)
 
     if lat and lon:
@@ -109,7 +114,7 @@ if st.session_state.page == "result":
             ).add_to(m)
         st_folium(m, width=700)
 
-    # Prepare features
+    # analyse inputs from input page and prep for estimation
     outdoor_flag = 0 if st.session_state.outdoor_space == "No" else 1
     renovated_flag = 1 if st.session_state.is_renovated == "Yes" else 0
     parking_flag = 0
@@ -133,11 +138,11 @@ if st.session_state.page == "result":
     lower_bound = int(estimated_price * 0.9)
     upper_bound = int(estimated_price * 1.1)
 
-    st.subheader("💰 Estimated Price Range")
+    st.write("💰 Estimated Price Range")
     st.write(f"CHF {lower_bound:,} - CHF {upper_bound:,}")
     st.markdown(f"### ➡️ Estimated Price: **CHF {int(estimated_price):,}**")
 
-    # Option for new entry
+    # Option for new entry, goes back to input page
     if st.button("Estimate Another Property"):
         st.session_state.page = "input"
         st.experimental_rerun()
