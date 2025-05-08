@@ -35,7 +35,7 @@ amenity_config = {
 selected_amenities = []
 
 #selection section for customer to choose
-cols = st.columns(len(amenity_config))
+cols = st.columns(len(amenity_config))              #understand these features and cite
 for i, label in enumerate(amenity_config.keys()):
     if cols[i].checkbox(label, key=f"btn_{label}"):
         selected_amenities.append(label.lower())
