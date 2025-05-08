@@ -192,9 +192,10 @@ if market_price_m2_y and not math.isnan(market_price_m2_y):
         ax.text(bar.get_x() + bar.get_width() / 2, height + 5, f"{int(height)} CHF", ha='center', va='bottom')
 
     st.pyplot(fig)
-    # happens whe  city is not in the training data
-    else:
-        st.warning("No market price data available for this city.")
+
+    # Happens when city is not in the training data
+else:
+    st.warning("No market price data available for this city.")
 
     # Option for new entry, goes back to input page
     if st.button("Estimate Another Property"):
