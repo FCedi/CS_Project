@@ -45,8 +45,9 @@ city_avg_p_sqm_y = {}
 for city, filename in city_files.items():
     if os.path.exists(filename):
         df = pd.read_csv(filename, encoding="latin1", sep=";")
-        df['p/squarem/y'] = pd.to_numeric(df['p/squarem/y'], errors='coerce')
-        avg = df['p/squarem/y'].mean()      # directly calculates the averag
+        df['p/squarem/y'] = df['p/squarem/y'].astype(str).str.replace(r"[^\d.]", "", regex=True) # only takes numereical value from p/squarem/y
+        df['p/squarem/y'] = pd.to_numeric(df['p/squarem/y'], errors='coerce') # prevents "No market price data available for this city." output
+        avg = df['p/squarem/y'].mean()  # directly calculates the averag
         city_avg_p_sqm_y[city] = round(avg, 2)
 
 # Checks for a session state (avoids reruns and errors when displaxint the results)
@@ -166,26 +167,35 @@ if st.session_state.page == "result":
     selected_city = st.session_state.city
     market_price_m2_y = city_avg_p_sqm_y.get(selected_city, None)
 
-    if market_price_m2_y and not math.isnan(market_price_m2_y):
-        market_estimated_price = (market_price_m2_y / 12) * st.session_state.size
+if market_price_m2_y and not math.isnan(market_price_m2_y):
+    market_estimated_price = (market_price_m2_y / 12) * st.session_state.size
 
-        st.subheader("📊 Market Average Price (based on current listings)")
-        st.write(f"Market Avg Rent Estimate: CHF {int(market_estimated_price):,}")
+    st.subheader("📊 Market Average Price (based on current listings)")
+    st.write(f"Market Avg Rent Estimate: CHF {int(market_estimated_price):,}")
 
-        st.subheader("📦 Estimated Price Comparison")
+    st.subheader("📦 Price per m² per Year Comparison")
 
-        labels = ['Lower ML Estimate', 'Market Average', 'Upper ML Estimate']
-        values = [lower_bound, market_estimated_price, upper_bound]
+    # Calculate user estimated price per m²/year
+    user_m2_price_year = (estimated_price / st.session_state.size) * 12
 
-        fig, ax = plt.subplots()
-        ax.bar(labels, values, color=["gray", "blue", "gray"])
-        ax.set_ylabel("CHF")
-        ax.set_title("Rental Price Comparison")
-        st.pyplot(fig)
+    labels = ['Your Property', 'Market Average']
+    values = [user_m2_price_year, market_price_m2_y]
 
-    # happens whe  city is not in the training data
-    else:
-        st.warning("No market price data available for this city.")
+    fig, ax = plt.subplots()
+    bars = ax.bar(labels, values, color=["green", "blue"])
+    ax.set_ylabel("CHF per m² per year")
+    ax.set_title("Price per m²/year Comparison")
+
+    # Add value labels on bars
+    for bar in bars:
+        height = bar.get_height()
+        ax.text(bar.get_x() + bar.get_width() / 2, height + 5, f"{int(height)} CHF", ha='center', va='bottom')
+
+    st.pyplot(fig)
+
+    # Happens when city is not in the training data
+else:
+    st.warning("No market price data available for this city.")
 
     # Option for new entry, goes back to input page
     if st.button("Estimate Another Property"):
