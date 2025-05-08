@@ -21,3 +21,19 @@ st.text_input('Target City')
 
 #Buttons to select critical amenities the customers want around his flat
 st.header('Select Amenities')
+
+#create a dictionnary and assign user friendly amenities
+amenity_config = {
+    "Supermarket": "shop",
+    "School": "amenity",
+    "Hospital": "amenity",
+    "Pharmacy": "amenity",
+    "Restaurant": "amenity"
+}
+
+#create an empty list for user amenities
+selected_amenities = []
+
+#selection section for customer to choose
+cols = st.columns(len(amenity_config))
+
