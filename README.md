@@ -30,13 +30,16 @@ It uses machine learning based on historical rental listings to predict a price 
 ```bash
 git clone <your-repository-url>
 cd CS_Project-07.10
+```bash
 
 ### 2. Install required Python packages
 
 ```bash
 pip install -r requirements.txt
+```bash
 
 ### 3. Run the app
 
 ```bash
 streamlit run app.py
+```bash
