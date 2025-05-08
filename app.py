@@ -45,8 +45,9 @@ city_avg_p_sqm_y = {}
 for city, filename in city_files.items():
     if os.path.exists(filename):
         df = pd.read_csv(filename, encoding="latin1", sep=";")
-        df['p/squarem/y'] = pd.to_numeric(df['p/squarem/y'], errors='coerce')
-        avg = df['p/squarem/y'].mean()      # directly calculates the averag
+        df['p/squarem/y'] = df['p/squarem/y'].astype(str).str.replace(r"[^\d.]", "", regex=True) # only takes numereical value from p/squarem/y
+        df['p/squarem/y'] = pd.to_numeric(df['p/squarem/y'], errors='coerce') # prevents "No market price data available for this city." output
+        avg = df['p/squarem/y'].mean()  # directly calculates the averag
         city_avg_p_sqm_y[city] = round(avg, 2)
 
 # Checks for a session state (avoids reruns and errors when displaxint the results)
