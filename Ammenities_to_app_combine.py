@@ -13,8 +13,11 @@ st.text_input("ZIP Code")
 st.text_input("City")
 
 #Input section : Potential precise location customer want to measure distance to, again https://docs.streamlit.io/
-st.header("Add a Target Location to Assess Distance")
-st.text_input(" Target Street")
-st.text_input("Target House Number")
-st.text_input("Target ZIP Code")
-st.text_input("Target City")
+st.header('Add a Target Location to Assess Distance')
+st.text_input('Target Street')
+st.text_input('Target House Number')
+st.text_input('Target ZIP Code')
+st.text_input('Target City')
+
+#Buttons to select critical amenities the customers want around his flat
+st.header('Select Amenities')
