@@ -7,6 +7,7 @@ import pandas as pd
 import numpy as np
 import os
 import matplotlib.pyplot as plt
+import math
 
 st.set_page_config(page_title="Swiss Real Estate Price Estimator", layout="wide")
 
@@ -165,14 +166,12 @@ if st.session_state.page == "result":
     selected_city = st.session_state.city
     market_price_m2_y = city_avg_p_sqm_y.get(selected_city, None)
 
-    if market_price_m2_y:
-
+    if market_price_m2_y and not math.isnan(market_price_m2_y):
         market_estimated_price = (market_price_m2_y / 12) * st.session_state.size
 
         st.subheader("📊 Market Average Price (based on current listings)")
         st.write(f"Market Avg Rent Estimate: CHF {int(market_estimated_price):,}")
 
-        # displays result in a box plot
         st.subheader("📦 Estimated Price Comparison")
 
         labels = ['Lower ML Estimate', 'Market Average', 'Upper ML Estimate']
@@ -183,6 +182,7 @@ if st.session_state.page == "result":
         ax.set_ylabel("CHF")
         ax.set_title("Rental Price Comparison")
         st.pyplot(fig)
+
     # happens whe  city is not in the training data
     else:
         st.warning("No market price data available for this city.")
