@@ -163,11 +163,12 @@ if st.session_state.page == "result":
     st.write(f"CHF {lower_bound:,} - CHF {upper_bound:,}")
     st.markdown(f"### ➡️ Estimated Price: **CHF {int(estimated_price):,}**")
 
-    # Market price calculation with average price per m2 per year comparison
-    selected_city = st.session_state.city
-    market_price_m2_y = city_avg_p_sqm_y.get(selected_city, None)
+# Market price calculation with average price per m2 per year comparison
+selected_city = st.session_state.city
+market_price_m2_y = city_avg_p_sqm_y.get(selected_city)
 
-if market_price_m2_y and not math.isnan(market_price_m2_y):
+if market_price_m2_y is not None and not math.isnan(market_price_m2_y):
+
     market_estimated_price = (market_price_m2_y / 12) * st.session_state.size
 
     st.subheader("📊 Market Average Price (based on current listings)")
@@ -175,7 +176,6 @@ if market_price_m2_y and not math.isnan(market_price_m2_y):
 
     st.subheader("📦 Price per m² per Year Comparison")
 
-    # Calculate user estimated price per m²/year
     user_m2_price_year = (estimated_price / st.session_state.size) * 12
 
     labels = ['Your Property', 'Market Average']
@@ -185,7 +185,7 @@ if market_price_m2_y and not math.isnan(market_price_m2_y):
     bars = ax.bar(labels, values, color=["green", "blue"])
     ax.set_ylabel("CHF per m² per year")
     ax.set_title("Price per m²/year Comparison")
-
+    
     # Add value labels on bars
     for bar in bars:
         height = bar.get_height()
