@@ -39,3 +39,7 @@ cols = st.columns(len(amenity_config))              #understand these features a
 for i, label in enumerate(amenity_config.keys()):
     if cols[i].checkbox(label, key=f"btn_{label}"):
         selected_amenities.append(label.lower())
+
+#set slider using streamlit features https://docs.streamlit.io/develop/api-reference/widgets/st.slider
+radius = st.slider('Search Radius in meters', 0, 5000, 300)
+
