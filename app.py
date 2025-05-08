@@ -9,6 +9,34 @@ import os
 import matplotlib.pyplot as plt
 import math
 
+#Variables that always exist and prevent craches
+if "page" not in st.session_state:
+    st.session_state.page = "welcome"
+
+if "city" not in st.session_state:
+    st.session_state.city = None
+
+if "zip_code" not in st.session_state:
+    st.session_state.zip_code = ""
+
+if "address" not in st.session_state:
+    st.session_state.address = ""
+
+if "size" not in st.session_state:
+    st.session_state.size = 0
+
+if "rooms" not in st.session_state:
+    st.session_state.rooms = 0
+
+if "outdoor_space" not in st.session_state:
+    st.session_state.outdoor_space = "No"
+
+if "is_renovated" not in st.session_state:
+    st.session_state.is_renovated = "No"
+
+if "parking" not in st.session_state:
+    st.session_state.parking = "No"
+
 st.set_page_config(page_title="Swiss Real Estate Price Estimator", layout="wide")
 
 # Load model (price estimator)
