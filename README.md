@@ -1,13 +1,6 @@
-# CS_Project-07.10
-
-This is a repository for the CS Project of Group 07.10
-
-Tis is the description of the Group number 07.10, we will focus on building a Real Estate Price Estimator
-
-Here is how it works...
-(add desctiption at the end.)
-
 # 🏡 Swiss Real Estate Price Estimator
+
+This the CS Project of Group 07.10
 
 This program provides you with a comparable rental price estimate for your apartment or house in **Geneva, Zürich, Lausanne, or St. Gallen**.
 
@@ -37,3 +30,13 @@ It uses machine learning based on historical rental listings to predict a price 
 ```bash
 git clone <your-repository-url>
 cd CS_Project-07.10
+
+### 2. Install required Python packages
+
+```bash
+pip install -r requirements.txt
+
+### 3. Run the app
+
+```bash
+streamlit run app.py
