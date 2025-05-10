@@ -1,6 +1,6 @@
 import streamlit as st
 import requests #will enable http request for the map api
-#since i will try to use a geostreetmap api, we can use https://geopy.readthedocs.io/en/stable/
+#since i will try to use a overpass turbo api, we can use https://geopy.readthedocs.io/en/stable/
 from geopy.geocoders import Nominatim #Nominatim since we are using openstreetmap api
 from geopy.distance import geodesic #we need geodesic to calculate the distance on the map we will deploy using the basic radius method
 import folium #enable the creation of a map in separate html file
@@ -14,10 +14,10 @@ st.title('Local Amenities :red[Finder]')
 #adress input section using https://docs.streamlit.io/ examples
 st.header('Enter Your Address')
 col1, col2 = st.columns([2, 1])
-street = col1.text_input('Street')
-house_number = col2.text_input('House Number')
-zip_code = st.text_input("ZIP Code")
-city = st.text_input("City")
+street = col1.text_input('Street','')
+house_number = col2.text_input('House Number','')
+zip_code = st.text_input('ZIP Code','')
+city = st.text_input('City','')
 
 #Input section : Potential precise location customer want to measure distance to, again https://docs.streamlit.io/
 st.header('Add a Target Location to Assess Distance')
