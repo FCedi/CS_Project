@@ -81,9 +81,30 @@ if st.button('Search nearby'):
                   way["{tag_type}"="{amenity}"](around:{radius},{lat},{lon});
                   relation["{tag_type}"="{amenity}"](around:{radius},{lat},{lon}); #building the query for overpass in json to then be used in openstreetmap
             );
-                out center;
-                """
-                response = requests.post("https://overpass-api.de/api/interpreter", data=query, timeout=30) #sends the query to overpas api, max 30 sec waiting time
-                data = response.json() #response in a dictionnary
-                elements = data.get("elements", []) #exctracts nodes ways and relations returned by overpass
+            out center;
+            """
+            response = requests.post("https://overpass-api.de/api/interpreter", data=query, timeout=30) #sends the query to overpas api, max 30 sec waiting time
+            data = response.json() #response in a dictionnary
+            elements = data.get("elements", []) #exctracts nodes ways and relations returned by overpass
 #basically this block builds the overpass query
+
+#processing data return by overpass
+            results = [] #initializing a list to hold result
+            for el in elements:
+                    el_lat = el.get("lat") or el.get("center", {}).get("lat")
+                    el_lon = el.get("lon") or el.get("center", {}).get("lon") #nods have long and lat directly, ways or relations have center dictionary, hence or function
+                    #here maybe add a line 
+                    dist = geodesic((lat, lon), (el_lat, el_lon)).meters #calculating distance in straight line
+                    name = el.get("tags", {}).get("name", f"{amenity.title()} (Unnamed)") #extracting name
+                    results.append((name, dist, el_lat, el_lon)) #creating complete list
+
+            for name, dist, el_lat, el_lon in sorted(results, key=lambda x: x[1])[:4]:
+                    folium.Marker(
+                        [el_lat, el_lon],
+                        tooltip=f"{name} — {dist:.0f} m",
+                        icon=folium.Icon(color="green")
+                    ).add_to(folium_map)
+        except Exception as e:
+            st.error(f'Error during Overpass request: {e}")
+
+
