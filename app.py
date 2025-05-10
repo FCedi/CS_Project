@@ -205,8 +205,8 @@ if st.session_state.page == "result":
         upper_bound = int(estimated_price * 1.1)
 
         st.subheader("💰 Estimated Price Range")
-        st.markdown(f"CHF {lower_bound:,} - CHF {upper_bound:,}")
-        st.markdown(f"### ➡️ Estimated Price: **CHF {int(estimated_price):,}**")
+        st.write(f"CHF {lower_bound:,} - CHF {upper_bound:,}")
+        st.write(f" ➡️ Estimated Price: **CHF {int(estimated_price):,}**")
 
         # Add Distances to close by ameneties
         st.subheader("🏬 Close by Amenities")
@@ -246,7 +246,7 @@ if st.session_state.page == "result":
             st.warning("No market price data available for this city.")
 
     with col2:
-        st.write("we need one more additional feature to show")
+        st.subheader("we need one more additional feature to show")
 
     # Option for new entry, goes back to input page
     if st.button("Estimate Another Property"):
