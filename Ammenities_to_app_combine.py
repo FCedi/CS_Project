@@ -74,7 +74,7 @@ if st.button('Search nearby'):
         #attempt to add amenities using try/except block to handle errors
         for amenity in selected_amenities: #for funtion iterates dictionnary established before
             assigned_type = amenity_config[amenity.capitalize()] #we assigned categories in the dictionnary before to certain tags, it assigns to proper openstreemap cat.
-            query = f''''''
+            query = f"""
             [out:json];
             (
                 node["{tag_type}"="{amenity}"](around:{radius},{lat},{lon});
@@ -82,7 +82,7 @@ if st.button('Search nearby'):
                   relation["{tag_type}"="{amenity}"](around:{radius},{lat},{lon}); #building the query for overpass in json to then be used in openstreetmap
             );
                 out center;
-                ''''''
+                """
                 response = requests.post("https://overpass-api.de/api/interpreter", data=query, timeout=30) #sends the query to overpas api, max 30 sec waiting time
                 data = response.json() #response in a dictionnary
                 elements = data.get("elements", []) #exctracts nodes ways and relations returned by overpass
