@@ -52,3 +52,9 @@ radius = st.slider('Search Radius in meters', 0, 5000, 300)
 
 #Search button using https://docs.streamlit.io/develop/api-reference/widgets/st.slider
 st.button('Search nearby')
+
+#assigning function to button
+if st.button('Search nearby'):
+    geolocator = Nominatim(user_agent="streamlit_app") #creating geocoder from geopy https://geopy.readthedocs.io/en/stable/index.html?highlight=user_agent
+    full_address = f"{street} {house_number}, {zip_code} {city}" #Combines the address components the user entered into one full string
+    location = geolocator.geocode(full_address)
