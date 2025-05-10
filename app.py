@@ -9,7 +9,7 @@ import os
 import matplotlib.pyplot as plt
 import math
 
-#Variables that always exist and prevent craches
+#Variables that always exist and prevent crashes
 if "page" not in st.session_state:
     st.session_state.page = "welcome"
 
@@ -89,14 +89,20 @@ if st.session_state.page == "welcome":
     st.title("🏡 Swiss Real Estate Price Estimator")
     
     # display on the welcome page
-    st.write("""
-    This program provides you with a comparable price for your rental unit if you want to rent out your apartment or house in Geneva, Zürich, /N
-    Lausanne, or St. Gallen.
-    """)
+    st.write(
+    "**Are you relocating to a new city and want to know if you have a good deal?**"\
+    "With so many real estate platforms available it's hard to see if you have a good offer infront of you and where exactly you will be located"\
+    "in the new city and what is close to you"\
+    "For this we developed this this app gives you a fair price range for your apartment based on the size of your new apartment and some features"\
+    "such as outdoor space,recent renovations and parking opportunities. Additionaly it will give you a comparison on what you are paying per square"\
+    "meter and what the average in your city is."
+    )
 
     if st.button("Let's Start"):
         st.session_state.page = "input"
         st.experimental_rerun()
+    
+    st.caption("This program is currently in development and only trained on apartments in Geneva, Zürich, Lausanne, and St. Gallen.")
 
 
 # INPUT PAGE
@@ -200,7 +206,7 @@ if st.session_state.page == "result":
 
         st.subheader("💰 Estimated Price Range")
         st.markdown(f"CHF {lower_bound:,} - CHF {upper_bound:,}")
-        st.write(f"### ➡️ Estimated Price: **CHF {int(estimated_price):,}**")
+        st.markdown(f"### ➡️ Estimated Price: **CHF {int(estimated_price):,}**")
 
         # Add Distances to close by ameneties
         st.subheader("🏬 Close by Amenities")
