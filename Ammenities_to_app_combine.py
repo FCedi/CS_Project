@@ -1,4 +1,13 @@
 import streamlit as st
+import requests #will enable http request for the map api
+#since i will try to use a geostreetmap api, we can use https://geopy.readthedocs.io/en/stable/
+from geopy.geocoders import Nominatim #Nominatim since we are using openstreetmap api
+from geopy.distance import geodesic #we need geodesic to calculate the distance on the map we will deploy using the basic radius method
+import folium #enable the creation of a map in separate html file
+import streamlit.components.v1 as components #to be able to create a custom compenent, here our display map https://docs.streamlit.io/develop/concepts/custom-components/intro
+
+
+
 
 #set page title using https://docs.streamlit.io/ examples
 st.set_page_config(page_title='Local Amenities Finder', layout='centered')
