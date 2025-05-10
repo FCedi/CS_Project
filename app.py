@@ -171,41 +171,7 @@ if st.session_state.page == "result":
         else:
             st.warning("Could not find this location on the map.")
 
-        # Market price calculation with average price per m2 per year comparison
-        selected_city = st.session_state.city
-        market_price_m2_y = city_avg_p_sqm_y.get(selected_city)
-
-        if market_price_m2_y is not None and not math.isnan(market_price_m2_y):
-
-            market_estimated_price = (market_price_m2_y / 12) * st.session_state.size
-
-            st.subheader("📊 Market Average Price (based on current listings)")
-            st.write(f"Market Avg Rent Estimate: CHF {int(market_estimated_price):,}")
-
-            st.subheader("📦 Price per m² per Year Comparison")
-
-            user_m2_price_year = (estimated_price / st.session_state.size) * 12
-
-            labels = ['Your Property', 'Market Average in your City']
-            values = [user_m2_price_year, market_price_m2_y]
-
-            fig, ax = plt.subplots()
-            bars = ax.bar(labels, values, color=["green", "blue"])
-            ax.set_ylabel("CHF per m² per year")
-            ax.set_title("Price per m²/year Comparison")
-
-            # Add value labels on bars
-            for bar in bars:
-                height = bar.get_height()
-                ax.text(bar.get_x() + bar.get_width() / 2, height + 5, f"{int(height)} CHF", ha='center', va='bottom')
-
-            st.pyplot(fig)
-
-        else:
-            # Happens when city is not in the training data
-            st.warning("No market price data available for this city.")
-
-    with col2: # rigth side of the page
+    with col2: # right side of the page 
 
         # analyse inputs from input page and prep for estimation
         outdoor_flag = 0 if st.session_state.outdoor_space == "No" else 1
@@ -234,6 +200,40 @@ if st.session_state.page == "result":
         st.write("💰 Estimated Price Range")
         st.write(f"CHF {lower_bound:,} - CHF {upper_bound:,}")
         st.markdown(f"### ➡️ Estimated Price: **CHF {int(estimated_price):,}**")
+
+    # Market price calculation with average price per m2 per year comparison
+    selected_city = st.session_state.city
+    market_price_m2_y = city_avg_p_sqm_y.get(selected_city)
+
+    if market_price_m2_y is not None and not math.isnan(market_price_m2_y):
+
+        market_estimated_price = (market_price_m2_y / 12) * st.session_state.size
+
+        st.subheader("📊 Market Average Price (based on current listings)")
+        st.write(f"Market Avg Rent Estimate: CHF {int(market_estimated_price):,}")
+
+        st.subheader("📦 Price per m² per Year Comparison")
+
+        user_m2_price_year = (estimated_price / st.session_state.size) * 12
+
+        labels = ['Your Property', 'Market Average in your City']
+        values = [user_m2_price_year, market_price_m2_y]
+
+        fig, ax = plt.subplots()
+        bars = ax.bar(labels, values, color=["green", "blue"])
+        ax.set_ylabel("CHF per m² per year")
+        ax.set_title("Price per m²/year Comparison")
+
+        # Add value labels on bars
+        for bar in bars:
+            height = bar.get_height()
+            ax.text(bar.get_x() + bar.get_width() / 2, height + 5, f"{int(height)} CHF", ha='center', va='bottom')
+
+        st.pyplot(fig)
+
+    else:
+        # Happens when city is not in the training data
+        st.warning("No market price data available for this city.")
 
     # Option for new entry, goes back to input page
     if st.button("Estimate Another Property"):
