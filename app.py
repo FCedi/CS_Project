@@ -90,9 +90,14 @@ if st.session_state.page == "welcome":
     
     # display on the welcome page
     st.write("""
-    This program provides you with a comparable price for your rental unit if you want to rent out your apartment or house in Geneva, Zürich, /N
-    Lausanne, or St. Gallen.
+    **Are you relocating to a new city and want to know if you have a good deal?** \n
+    This app gives you a fair price range for your apartment based on the size of your new apartment and some features such as outdoor space, \n
+    recent renovations and parking opportunities. Additionaly it will give you a comparison on what you are paying per square meter and what \n
+    the average in your city is.
+        
     """)
+
+    st.caption("This program is currently in development and only trained on apartments in Geneva, Zürich, Lausanne, and St. Gallen.")
 
     if st.button("Let's Start"):
         st.session_state.page = "input"
@@ -200,7 +205,7 @@ if st.session_state.page == "result":
 
         st.subheader("💰 Estimated Price Range")
         st.markdown(f"CHF {lower_bound:,} - CHF {upper_bound:,}")
-        st.write(f"### ➡️ Estimated Price: **CHF {int(estimated_price):,}**")
+        st.markdown(f"### ➡️ Estimated Price: **CHF {int(estimated_price):,}**")
 
         # Add Distances to close by ameneties
         st.subheader("🏬 Close by Amenities")
