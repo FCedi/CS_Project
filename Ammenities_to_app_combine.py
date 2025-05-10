@@ -107,6 +107,30 @@ if st.button('Search nearby'):
                         ).add_to(folium_map)
         except Exception as e:
             st.error(f'Error during Overpass request: {e}')
+            #comparaison point
+        if compare_street and compare_zip_code and compare_city:
+            compare_address = f"{compare_street} {compare_house_number}, {compare_zip_code} {compare_city}"
+            compare_location = geolocator.geocode(compare_address)
+            if compare_location:
+                compare_lat = compare_location.latitude
+                compare_lon = compare_location.longitude
+                dist_to_compare = geodesic((lat, lon), (compare_lat, compare_lon)).meters
+
+                #Add marker for comparison
+                folium.Marker(
+                    [compare_lat, compare_lon],
+                    tooltip=f"Comparison Location — {dist_to_compare:.0f} m",
+                    icon=folium.Icon(color="red", icon="info-sign")
+                ).add_to(folium_map)
+
+                #Add line between home and comparison
+                folium.PolyLine(
+                    locations=[(lat, lon), (compare_lat, compare_lon)],
+                    color="red", weight=2.5, opacity=0.8,
+                    tooltip=f"{dist_to_compare:.0f} m"
+                ).add_to(folium_map)
+
+                st.info(f"Distance to comparison location: **{dist_to_compare:.0f} meters**")
     #first attempt displaying map
         st.session_state.map_html = folium_map._repr_html_()
     
