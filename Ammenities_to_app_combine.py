@@ -129,10 +129,6 @@ if st.button("🔍 Search Nearby"):
         # ---- Render map
         st.session_state.map_html = folium_map._repr_html_()
 
-# ---- Display map safely ----
-if st.session_state.map_html:
-    st.subheader("🗺️ Map of Nearest Amenities")
-    components.html(st.session_state.map_html, height=500)
 
 
 
