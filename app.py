@@ -9,7 +9,7 @@ import os
 import matplotlib.pyplot as plt
 import math
 
-#Variables that always exist and prevent craches
+#Variables that always exist and prevent crashes
 if "page" not in st.session_state:
     st.session_state.page = "welcome"
 
@@ -89,19 +89,20 @@ if st.session_state.page == "welcome":
     st.title("🏡 Swiss Real Estate Price Estimator")
     
     # display on the welcome page
-    st.write("""
-    **Are you relocating to a new city and want to know if you have a good deal?** \n
-    This app gives you a fair price range for your apartment based on the size of your new apartment and some features such as outdoor space, \n
-    recent renovations and parking opportunities. Additionaly it will give you a comparison on what you are paying per square meter and what \n
-    the average in your city is.
-        
-    """)
-
-    st.caption("This program is currently in development and only trained on apartments in Geneva, Zürich, Lausanne, and St. Gallen.")
+    st.write(
+    "**Are you relocating to a new city and want to know if you have a good deal?**"
+    "With so many real estate platforms available it's hard to see if you have a good offer infront of you and where exactly you will be located"
+    "in the new city and what is close to you"
+    "For this we developed this this app gives you a fair price range for your apartment based on the size of your new apartment and some features"
+    "such as outdoor space,recent renovations and parking opportunities. Additionaly it will give you a comparison on what you are paying per square"
+    "meter and what the average in your city is."
+    )
 
     if st.button("Let's Start"):
         st.session_state.page = "input"
         st.experimental_rerun()
+    
+    st.caption("This program is currently in development and only trained on apartments in Geneva, Zürich, Lausanne, and St. Gallen.")
 
 
 # INPUT PAGE
