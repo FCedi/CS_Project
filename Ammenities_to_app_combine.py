@@ -61,3 +61,13 @@ if st.button('Search nearby'):
 if not location:
         st.error("Location not found")
         st.session_state.map_html = None
+   else:
+        lat, lon = location.latitude, location.longitude
+        st.success(f"📍 Found: {location.address} ({lat:.5f}, {lon:.5f})")
+
+        folium_map = folium.Map(location=[lat, lon], zoom_start=14)
+        folium.Marker(
+            [lat, lon],
+            tooltip="Your Location",
+            icon=folium.Icon(color='blue')
+        ).add_to(folium_map)
