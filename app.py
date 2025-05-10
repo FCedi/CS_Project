@@ -155,9 +155,10 @@ if st.session_state.page == "result":
     st.write(f"**Outdoor Space:** {st.session_state.outdoor_space}")
     st.write(f"**Recently Renovated:** {st.session_state.is_renovated}")
     st.write(f"**Parking:** {st.session_state.parking}")
+    
+    # Add an "Edit Property Details" button to go back to input page
 
-    col1, col2 = st.columns(2)  # Splits the rest of the page in two columns
-
+    col1, col2 = st.columns(2)
     with col1:  # left side of the page
         st.subheader("📍 Property Location")
 
