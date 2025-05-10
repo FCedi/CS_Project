@@ -43,3 +43,5 @@ for i, label in enumerate(amenity_config.keys()):
 #set slider using streamlit features https://docs.streamlit.io/develop/api-reference/widgets/st.slider
 radius = st.slider('Search Radius in meters', 0, 5000, 300)
 
+#Search button using https://docs.streamlit.io/develop/api-reference/widgets/st.slider
+st.button('Search nearby')
