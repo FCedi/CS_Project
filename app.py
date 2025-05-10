@@ -86,11 +86,11 @@ if "page" not in st.session_state:
 
 # WELCOME PAGE
 if st.session_state.page == "welcome":
-    st.title("🏡 Swiss Real Estate Price Estimator")
+    st.title("🏡 Fair Rental Price Assesser")
     
     # display on the welcome page
     st.write("""
-        **Are you relocating to a new city and want to know if you have a good deal?**\
+        **Are you relocating to a new city and want to know if you have a good deal?**\n
         With so many real estate platforms available it's hard to see if you have a good offer infront of you and where exactly you will be located\
         in the new city and what is close to you\n
         For this we developed this this app gives you a fair price range for your apartment based on the size of your new apartment and some features\
