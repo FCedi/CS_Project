@@ -62,7 +62,7 @@ if st.button('Search nearby'):
     if not location:
         st.error('Location not found')
         st.session_state.map_html = None
-   else:
+    else:
         lat, lon = location.latitude, location.longitude
         st.success(f"📍 Found: {location.address} ({lat:.5f}, {lon:.5f})")
 
