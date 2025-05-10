@@ -58,7 +58,7 @@ if st.button('Search nearby'):
     geolocator = Nominatim(user_agent="streamlit_app") #creating geocoder from geopy https://geopy.readthedocs.io/en/stable/index.html?highlight=user_agent
     full_address = f"{street} {house_number}, {zip_code} {city}" #Combines the address components the user entered into one full string
     location = geolocator.geocode(full_address)
-if not location:
+    if not location:
         st.error("Location not found")
         st.session_state.map_html = None
    else:
