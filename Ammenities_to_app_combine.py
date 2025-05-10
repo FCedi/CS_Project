@@ -51,8 +51,6 @@ for i, label in enumerate(amenity_config.keys()):
 radius = st.slider('Search Radius in meters', 0, 5000, 300)
 
 #Search button using https://docs.streamlit.io/develop/api-reference/widgets/st.slider
-
-
 #assigning function to button
 if st.button('Search nearby'):
     geolocator = Nominatim(user_agent="streamlit_app") #creating geocoder from geopy https://geopy.readthedocs.io/en/stable/index.html?highlight=user_agent
@@ -61,14 +59,31 @@ if st.button('Search nearby'):
 
     if not location:
         st.error('Location not found')
-        st.session_state.map_html = None
+        st.session_state.map_html = None  #if adress not found, no map and error message
     else:
         lat, lon = location.latitude, location.longitude
-        st.success(f"📍 Found: {location.address} ({lat:.5f}, {lon:.5f})")
+        st.success(f"Found: {location.address} ({lat:.5f}, {lon:.5f})") #if found assign geoloc values
 
         folium_map = folium.Map(location=[lat, lon], zoom_start=14)
         folium.Marker(
             [lat, lon],
             tooltip='Your Location',
             icon=folium.Icon(color='blue')
-        ).add_to(folium_map)
+        ).add_to(folium_map) #add features found to the map
+
+        #attempt to add amenities using try/except block to handle errors
+        for amenity in selected_amenities: #for funtion iterates dictionnary established before
+            assigned_type = amenity_config[amenity.capitalize()] #we assigned categories in the dictionnary before to certain tags, it assigns to proper openstreemap cat.
+            query = f''''''
+            [out:json];
+            (
+                node["{tag_type}"="{amenity}"](around:{radius},{lat},{lon});
+                  way["{tag_type}"="{amenity}"](around:{radius},{lat},{lon});
+                  relation["{tag_type}"="{amenity}"](around:{radius},{lat},{lon}); #building the query for overpass in json to then be used in openstreetmap
+            );
+                out center;
+                ''''''
+                response = requests.post("https://overpass-api.de/api/interpreter", data=query, timeout=30) #sends the query to overpas api, max 30 sec waiting time
+                data = response.json() #response in a dictionnary
+                elements = data.get("elements", []) #exctracts nodes ways and relations returned by overpass
+#basically this block builds the overpass query
