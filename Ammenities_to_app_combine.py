@@ -106,6 +106,9 @@ if st.button('Search nearby'):
                         icon=folium.Icon(color="green")
                     ).add_to(folium_map)
     except Exception as e:
-        st.error(f'Error during Overpass request: {e}")
+        st.error(f'Error during Overpass request: {e}')
+    #first attempt displaying map
+    st.session_state.map_html = folium_map._repr_html_()
+    
 
 
