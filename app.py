@@ -90,11 +90,11 @@ if st.session_state.page == "welcome":
     
     # display on the welcome page
     st.write(
-    "**Are you relocating to a new city and want to know if you have a good deal?**"
-    "With so many real estate platforms available it's hard to see if you have a good offer infront of you and where exactly you will be located"
-    "in the new city and what is close to you"
-    "For this we developed this this app gives you a fair price range for your apartment based on the size of your new apartment and some features"
-    "such as outdoor space,recent renovations and parking opportunities. Additionaly it will give you a comparison on what you are paying per square"
+    "**Are you relocating to a new city and want to know if you have a good deal?**"\
+    "With so many real estate platforms available it's hard to see if you have a good offer infront of you and where exactly you will be located"\
+    "in the new city and what is close to you"\
+    "For this we developed this this app gives you a fair price range for your apartment based on the size of your new apartment and some features"\
+    "such as outdoor space,recent renovations and parking opportunities. Additionaly it will give you a comparison on what you are paying per square"\
     "meter and what the average in your city is."
     )
 
