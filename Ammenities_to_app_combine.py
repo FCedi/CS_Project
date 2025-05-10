@@ -94,10 +94,10 @@ if st.button('Search nearby'):
             for el in elements:
                     el_lat = el.get("lat") or el.get("center", {}).get("lat")
                     el_lon = el.get("lon") or el.get("center", {}).get("lon") #nods have long and lat directly, ways or relations have center dictionary, hence or function
-                    #here maybe add a line 
-                    dist = geodesic((lat, lon), (el_lat, el_lon)).meters #calculating distance in straight line
-                    name = el.get("tags", {}).get("name", f"{amenity.title()} (Unnamed)") #extracting name
-                    results.append((name, dist, el_lat, el_lon)) #creating complete list
+                    if el_lat and el_lon:
+                        dist = geodesic((lat, lon), (el_lat, el_lon)).meters #calculating distance in straight line
+                        name = el.get("tags", {}).get("name", f"{amenity.title()} (Unnamed)") #extracting name
+                        results.append((name, dist, el_lat, el_lon)) #creating complete list
 
             for name, dist, el_lat, el_lon in sorted(results, key=lambda x: x[1])[:4]:
                     folium.Marker(
