@@ -72,6 +72,7 @@ if st.button('Search nearby'):
         ).add_to(folium_map) #add features found to the map
 
         #attempt to add amenities using try/except block to handle errors
+    try:
         for amenity in selected_amenities: #for funtion iterates dictionnary established before
             assigned_type = amenity_config[amenity.capitalize()] #we assigned categories in the dictionnary before to certain tags, it assigns to proper openstreemap cat.
             query = f"""
@@ -104,7 +105,7 @@ if st.button('Search nearby'):
                         tooltip=f"{name} — {dist:.0f} m",
                         icon=folium.Icon(color="green")
                     ).add_to(folium_map)
-        except Exception as e:
-            st.error(f'Error during Overpass request: {e}")
+    except Exception as e:
+        st.error(f'Error during Overpass request: {e}")
 
 
