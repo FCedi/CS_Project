@@ -115,7 +115,7 @@ if st.session_state.page == "input":
         st.header("📍 Address")
         street = st.text_input("Street and House Number")
         zip_code = st.text_input("ZIP Code", max_chars=4)
-        city = st.text_input("City")
+        city = st.text_input("City") # look into autocomplete
 
         st.header("🏠 Property Details")
         size = st.number_input("Property Size (m²)", min_value=10, max_value=1000, step=5, value=100)
@@ -254,3 +254,4 @@ if st.session_state.page == "result":
         st.session_state.page = "input"
         st.experimental_rerun()
 
+# look if we can make a pdf download button
