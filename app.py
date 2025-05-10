@@ -152,58 +152,58 @@ if st.session_state.page == "result":
     col1, col2 = st.columns(2)  # Splits the rest of the page in two columns
 
     with col1:  # left side of the page
-    st.subheader("📍 Property Location")
+        st.subheader("📍 Property Location")
 
-    # Get location and show location
-    lat, lon = get_location(st.session_state.address, st.session_state.zip_code, st.session_state.city)
+        # Get location and show location
+        lat, lon = get_location(st.session_state.address, st.session_state.zip_code, st.session_state.city)
 
-    if lat and lon:
-        m = folium.Map(location=[lat, lon], zoom_start=15)
-        folium.Marker(
-            [lat, lon],
-            popup="Property Location",
-            tooltip="Property Location",
-            icon=folium.Icon(color="red", icon="home", prefix='fa')
-        ).add_to(m)
+        if lat and lon:
+            m = folium.Map(location=[lat, lon], zoom_start=15)
+            folium.Marker(
+                [lat, lon],
+                popup="Property Location",
+                tooltip="Property Location",
+                icon=folium.Icon(color="red", icon="home", prefix='fa')
+            ).add_to(m)
 
-        st_folium(m, width=600, height=400)
+            st_folium(m, width=600, height=400)
 
-    else:
-        st.warning("Could not find this location on the map.")
+        else:
+            st.warning("Could not find this location on the map.")
 
-    # Market price calculation with average price per m2 per year comparison
-    selected_city = st.session_state.city
-    market_price_m2_y = city_avg_p_sqm_y.get(selected_city)
+        # Market price calculation with average price per m2 per year comparison
+        selected_city = st.session_state.city
+        market_price_m2_y = city_avg_p_sqm_y.get(selected_city)
 
-    if market_price_m2_y is not None and not math.isnan(market_price_m2_y):
+        if market_price_m2_y is not None and not math.isnan(market_price_m2_y):
 
-        market_estimated_price = (market_price_m2_y / 12) * st.session_state.size
+            market_estimated_price = (market_price_m2_y / 12) * st.session_state.size
 
-        st.subheader("📊 Market Average Price (based on current listings)")
-        st.write(f"Market Avg Rent Estimate: CHF {int(market_estimated_price):,}")
+            st.subheader("📊 Market Average Price (based on current listings)")
+            st.write(f"Market Avg Rent Estimate: CHF {int(market_estimated_price):,}")
 
-        st.subheader("📦 Price per m² per Year Comparison")
+            st.subheader("📦 Price per m² per Year Comparison")
 
-        user_m2_price_year = (estimated_price / st.session_state.size) * 12
+            user_m2_price_year = (estimated_price / st.session_state.size) * 12
 
-        labels = ['Your Property', 'Market Average in your City']
-        values = [user_m2_price_year, market_price_m2_y]
+            labels = ['Your Property', 'Market Average in your City']
+            values = [user_m2_price_year, market_price_m2_y]
 
-        fig, ax = plt.subplots()
-        bars = ax.bar(labels, values, color=["green", "blue"])
-        ax.set_ylabel("CHF per m² per year")
-        ax.set_title("Price per m²/year Comparison")
+            fig, ax = plt.subplots()
+            bars = ax.bar(labels, values, color=["green", "blue"])
+            ax.set_ylabel("CHF per m² per year")
+            ax.set_title("Price per m²/year Comparison")
 
-        # Add value labels on bars
-        for bar in bars:
-            height = bar.get_height()
-            ax.text(bar.get_x() + bar.get_width() / 2, height + 5, f"{int(height)} CHF", ha='center', va='bottom')
+            # Add value labels on bars
+            for bar in bars:
+                height = bar.get_height()
+                ax.text(bar.get_x() + bar.get_width() / 2, height + 5, f"{int(height)} CHF", ha='center', va='bottom')
 
-        st.pyplot(fig)
+            st.pyplot(fig)
 
-    else:
-        # Happens when city is not in the training data
-        st.warning("No market price data available for this city.")
+        else:
+            # Happens when city is not in the training data
+            st.warning("No market price data available for this city.")
 
     with col2: # rigth side of the page
 
