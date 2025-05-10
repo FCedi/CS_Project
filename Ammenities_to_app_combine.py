@@ -7,8 +7,6 @@ import folium #enable the creation of a map in separate html file
 import streamlit.components.v1 as components #to be able to create a custom compenent, here our display map https://docs.streamlit.io/develop/concepts/custom-components/intro
 
 
-
-
 #set page title using https://docs.streamlit.io/ examples
 st.set_page_config(page_title='Local Amenities Finder', layout='centered')
 st.title('Local Amenities :red[Finder]')
@@ -16,17 +14,17 @@ st.title('Local Amenities :red[Finder]')
 #adress input section using https://docs.streamlit.io/ examples
 st.header('Enter Your Address')
 col1, col2 = st.columns([2, 1])
-col1.text_input('Street')
-col2.text_input('House Number')
-st.text_input("ZIP Code")
-st.text_input("City")
+street = col1.text_input('Street')
+house_number = col2.text_input('House Number')
+zip_code = st.text_input("ZIP Code")
+city = st.text_input("City")
 
 #Input section : Potential precise location customer want to measure distance to, again https://docs.streamlit.io/
 st.header('Add a Target Location to Assess Distance')
-st.text_input('Target Street')
-st.text_input('Target House Number')
-st.text_input('Target ZIP Code')
-st.text_input('Target City')
+target_street = st.text_input('Target Street')
+target_house_number = st.text_input('Target House Number')
+target_zip_code = st.text_input('Target ZIP Code')
+target_city = st.text_input('Target City')
 
 #Buttons to select critical amenities the customers want around his flat
 st.header('Select Amenities')
