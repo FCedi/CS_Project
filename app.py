@@ -9,7 +9,7 @@ import os
 import matplotlib.pyplot as plt
 import math
 
-#Variables that always exist and prevent crashes
+#Variables that always exist and prevent crashes when reloading the page at the wrong time
 if "page" not in st.session_state:
     st.session_state.page = "welcome"
 
@@ -37,7 +37,7 @@ if "is_renovated" not in st.session_state:
 if "parking" not in st.session_state:
     st.session_state.parking = "No"
 
-st.set_page_config(page_title="Swiss Real Estate Price Estimator", layout="wide")
+st.set_page_config(page_title="Fair Rental Price Assessor", layout="wide")
 
 # Load model (price estimator)
 @st.cache_resource
@@ -86,17 +86,17 @@ if "page" not in st.session_state:
 
 # WELCOME PAGE
 if st.session_state.page == "welcome":
-    st.title("🏡 Fair Rental Price Assesser")
+    st.title("🏡 Fair Rental Price Assessor")
     
     # display on the welcome page
-    st.write(
-        "**Are you relocating to a new city and want to know if you have a good deal?**\n"
-        "With so many real estate platforms available it's hard to see if you have a good offer infront of you and where exactly you will be located\
-        in the new city and what is close to you."
-        "For this we developed this this app gives you a fair price range for your apartment based on the size of your new apartment and some features\
+    st.write("""
+        **Are you relocating to a new city and want to know if you have a good deal?**\n
+        With so many real estate platforms available it's hard to see if you have a good offer infront of you and where exactly you will be located\
+        in the new city and what is close to you.
+        For this we developed this this app gives you a fair price range for your apartment based on the size of your new apartment and some features\
         such as outdoor space,recent renovations and parking opportunities. Additionaly it will give you a comparison on what you are paying per square\
-        meter and what the average in your city is."
-    )
+        meter and what the average in your city is.
+    """)
 
     if st.button("Let's Start"):
         st.session_state.page = "input"
