@@ -1,3 +1,5 @@
+
+
 import streamlit as st
 import requests
 import folium
@@ -8,34 +10,33 @@ import numpy as np
 import os
 import matplotlib.pyplot as plt
 import math
+from geopy.geocoders import Nominatim
+from geopy.distance import geodesic
+import streamlit.components.v1 as components
 
 #Variables that always exist and prevent crashes when reloading the page at the wrong time
 if "page" not in st.session_state:
     st.session_state.page = "welcome"
-
 if "city" not in st.session_state:
-    st.session_state.city = None
-
+    st.session_state.city = ""
 if "zip_code" not in st.session_state:
     st.session_state.zip_code = ""
-
 if "address" not in st.session_state:
     st.session_state.address = ""
-
 if "size" not in st.session_state:
     st.session_state.size = 0
-
 if "rooms" not in st.session_state:
     st.session_state.rooms = 0
-
 if "outdoor_space" not in st.session_state:
     st.session_state.outdoor_space = "No"
-
 if "is_renovated" not in st.session_state:
     st.session_state.is_renovated = "No"
-
 if "parking" not in st.session_state:
     st.session_state.parking = "No"
+if "amenities" not in st.session_state:
+    st.session_state.amenities = []
+if "radius" not in st.session_state:
+    st.session_state.radius = 300
 
 st.set_page_config(page_title="Fair Rental Price Assessor", layout="wide")
 
@@ -69,7 +70,6 @@ city_files = {
 }
 
 city_avg_p_sqm_y = {}
-
 for city, filename in city_files.items():
     if os.path.exists(filename):
         df = pd.read_csv(filename, encoding="latin1", sep=";")
@@ -126,10 +126,15 @@ if st.session_state.page == "input":
         is_renovated = st.radio("Is the property new or recently renovated (last 5 years)?", ["Yes", "No"])
         parking = st.selectbox("Does the property include a parking space?", ["No", "Parking Outdoor", "Garage"])
 
-        submitted = st.form_submit_button("Estimate Rent")
+        st.header("🏬 Amenities")
+        amenity_options = ["Supermarket", "School", "Hospital", "Pharmacy", "Restaurant"]
+        amenities = [a for a in amenity_options if st.checkbox(a, key=f"chk_{a}")]
+        radius = st.slider("Search Radius in meters", 100, 3000, 500)
 
-    if submitted:
+        submitted = st.form_submit_button("Estimate a Fair Rent")
+
         # Save data to session and go to result page
+    if submitted:
         st.session_state.address = street
         st.session_state.zip_code = zip_code
         st.session_state.city = city
@@ -138,6 +143,8 @@ if st.session_state.page == "input":
         st.session_state.outdoor_space = outdoor_space
         st.session_state.is_renovated = is_renovated
         st.session_state.parking = parking
+        st.session_state.amenities = amenities
+        st.session_state.radius = radius
         st.session_state.page = "result"
         st.experimental_rerun()
 
@@ -159,6 +166,7 @@ if st.session_state.page == "result":
     # Add an "Edit Property Details" button to go back to input page
 
     col1, col2 = st.columns(2)
+
     with col1:  # left side of the page
         st.subheader("📍 Property Location")
 
@@ -167,17 +175,41 @@ if st.session_state.page == "result":
 
         if lat and lon:
             m = folium.Map(location=[lat, lon], zoom_start=15)
-            folium.Marker(
-                [lat, lon],
-                popup="Property Location",
-                tooltip="Property Location",
-                icon=folium.Icon(color="red", icon="home", prefix='fa')
-            ).add_to(m)
+            folium.Marker([
+                lat, lon
+            ], tooltip="Your Property", icon=folium.Icon(color='blue')).add_to(m)
 
-            st_folium(m, width=600, height=400)
+            # Display amenities
+            geolocator = Nominatim(user_agent='streamlit_app')
+            for amenity in st.session_state.amenities:
+                query = f"""
+                [out:json];
+                (
+                  node["amenity"="{amenity.lower()}"](around:{st.session_state.radius},{lat},{lon});
+                  way["amenity"="{amenity.lower()}"](around:{st.session_state.radius},{lat},{lon});
+                  relation["amenity"="{amenity.lower()}"](around:{st.session_state.radius},{lat},{lon});
+                );
+                out center;
+                """
+                response = requests.post("https://overpass-api.de/api/interpreter", data=query)
+                if response.ok:
+                    data = response.json().get('elements', [])
+                    for el in data[:3]:
+                        el_lat = el.get('lat') or el.get('center', {}).get('lat')
+                        el_lon = el.get('lon') or el.get('center', {}).get('lon')
+                        if el_lat and el_lon:
+                            dist = geodesic((lat, lon), (el_lat, el_lon)).meters
+                            name = el.get('tags', {}).get('name', f"{amenity.title()} (Unnamed)")
+                            folium.Marker(
+                                [el_lat, el_lon],
+                                tooltip=f"{name} — {dist:.0f} m",
+                                icon=folium.Icon(color='green')
+                            ).add_to(m)
 
+            st.subheader("📍 Map of Your Property & Nearby Amenities")
+            st_folium(m, width=700, height=500)
         else:
-            st.warning("Could not find this location on the map.")
+            st.warning("Could not locate your address on the map.")
 
     with col2: # right side of the page 
 
