@@ -168,7 +168,7 @@ if st.session_state.page == "result":
     col1, col2 = st.columns(2)
 
     with col1:  # left side of the page
-        st.subheader("📍 Property Location")
+        st.subheader("📍 Property Location & Nearby Amenities")
 
         # Get location and show location
         lat, lon = get_location(st.session_state.address, st.session_state.zip_code, st.session_state.city)
@@ -206,8 +206,7 @@ if st.session_state.page == "result":
                                 icon=folium.Icon(color='green')
                             ).add_to(m)
 
-            st.subheader("📍 Map of Your Property & Nearby Amenities")
-            st_folium(m, width=700, height=500)
+            st_folium(m, width=600, height=400)
         else:
             st.warning("Could not locate your address on the map.")
 
