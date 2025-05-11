@@ -212,36 +212,8 @@ if st.session_state.page == "result":
 
     with col2: # right side of the page 
 
-        # analyse inputs from input page and prep for estimation
-        outdoor_flag = 0 if st.session_state.outdoor_space == "No" else 1
-        renovated_flag = 1 if st.session_state.is_renovated == "Yes" else 0
-        parking_flag = 0
-        if st.session_state.parking == "Parking Outdoor":
-            parking_flag = 1
-        elif st.session_state.parking == "Garage":
-            parking_flag = 2
-
-        # Create input DataFrame for prediction
-        features = pd.DataFrame([{
-            "ZIP": float(st.session_state.zip_code),
-            "number_of_rooms": st.session_state.rooms,
-            "square_meters": st.session_state.size,
-            "place_type": "Apartment",
-            "Is_Renovated_or_New": renovated_flag,
-            "Has_Parking": parking_flag,
-            "Has_Outdoor_Space": outdoor_flag
-        }])
-
-        estimated_price = model.predict(features)[0]
-        lower_bound = int(estimated_price * 0.9)
-        upper_bound = int(estimated_price * 1.1)
-
-        st.subheader("💰 Estimated Price Range")
-        st.write(f"CHF {lower_bound:,} - CHF {upper_bound:,}")
-        st.write(f" ➡️ Estimated Price: **CHF {int(estimated_price):,}**")
-
         # Add Distances to close by ameneties
-        st.subheader("🏬 Close by Amenities")
+        st.subheader("🏬 Distance to selected Amenities")
 
     # Market price calculation with average price per m2 per year comparison
     selected_city = st.session_state.city
@@ -256,6 +228,27 @@ if st.session_state.page == "result":
 
             st.subheader("📦 Price per m² per Year Comparison")
 
+            # analyse inputs from input page and prep for estimation
+            outdoor_flag = 0 if st.session_state.outdoor_space == "No" else 1
+            renovated_flag = 1 if st.session_state.is_renovated == "Yes" else 0
+            parking_flag = 0
+            if st.session_state.parking == "Parking Outdoor":
+                parking_flag = 1
+            elif st.session_state.parking == "Garage":
+                parking_flag = 2
+
+            # Create input DataFrame for prediction
+            features = pd.DataFrame([{
+                "ZIP": float(st.session_state.zip_code),
+                "number_of_rooms": st.session_state.rooms,
+                "square_meters": st.session_state.size,
+                "place_type": "Apartment",
+                "Is_Renovated_or_New": renovated_flag,
+                "Has_Parking": parking_flag,
+                "Has_Outdoor_Space": outdoor_flag
+        }])
+
+            estimated_price = model.predict(features)[0]
             user_m2_price_year = (estimated_price / st.session_state.size) * 12
 
             labels = ['Your Property', 'Market Average in your City']
@@ -268,17 +261,23 @@ if st.session_state.page == "result":
 
             # Add value labels on bars
             for bar in bars:
-                height = bar.get_height()
-                ax.text(bar.get_x() + bar.get_width() / 2, height + 5, f"{int(height)} CHF", ha='center', va='bottom')
+                    height = bar.get_height()
+                    ax.text(bar.get_x() + bar.get_width() / 2, height + 5, f"{int(height)} CHF", ha='center', va='bottom')
 
             st.pyplot(fig)
 
+        # Happens when city is not in the training data
         else:
-            # Happens when city is not in the training data
             st.warning("No market price data available for this city.")
 
     with col2:
-        st.subheader("we need one more additional feature to show")
+
+        lower_bound = int(estimated_price * 0.9)
+        upper_bound = int(estimated_price * 1.1)
+
+        st.subheader("💰 Estimated Price Range")
+        st.write(f"CHF {lower_bound:,} - CHF {upper_bound:,}")
+        st.write(f" ➡️ Estimated Price: **CHF {int(estimated_price):,}**")
 
     # Option for new entry, goes back to input page
     if st.button("Estimate Another Property"):
