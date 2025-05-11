@@ -1,5 +1,3 @@
-
-
 import streamlit as st
 import requests
 import folium
@@ -8,11 +6,13 @@ import joblib
 import pandas as pd
 import numpy as np
 import os
-import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt # For Diagram
 import math
-from geopy.geocoders import Nominatim
+from geopy.geocoders import Nominatim # For Amenities
 from geopy.distance import geodesic
 import streamlit.components.v1 as components
+from fpdf import FPDF # For PDF creation
+import base64
 
 #Variables that always exist and prevent crashes when reloading the page at the wrong time
 if "page" not in st.session_state:
@@ -336,9 +336,35 @@ if st.session_state.page == "result":
         st.write(f"CHF {lower_bound:,} - CHF {upper_bound:,}")
         st.write(f" ➡️ Estimated Price: **CHF {int(estimated_price):,}**")
 
+    def create_pdf():
+        pdf = FPDF()
+        pdf.add_page()
+        pdf.set_font("Arial", size=12)
+
+        pdf.cell(200, 10, txt="Rental Property Estimation", ln=True, align="C")
+        pdf.ln(10)
+
+        pdf.cell(200, 10, txt=f"Address: {st.session_state.address}, {st.session_state.zip_code} {st.session_state.city}", ln=True)
+        pdf.cell(200, 10, txt=f"Size: {st.session_state.size} m²", ln=True)
+        pdf.cell(200, 10, txt=f"Rooms: {st.session_state.rooms}", ln=True)
+        pdf.cell(200, 10, txt=f"Outdoor Space: {st.session_state.outdoor_space}", ln=True)
+        pdf.cell(200, 10, txt=f"Renovated: {st.session_state.is_renovated}", ln=True)
+        pdf.cell(200, 10, txt=f"Parking: {st.session_state.parking}", ln=True)
+        pdf.ln(10)
+        pdf.cell(200, 10, txt=f"Estimated Monthly Rent: CHF {int(st.session_state.estimated_price):,}", ln=True)
+
+        return pdf.output(dest='S').encode('latin1')
+
+    def download_pdf_button():
+        pdf_data = create_pdf()
+        b64_pdf = base64.b64encode(pdf_data).decode('utf-8')
+        href = f'<a href="data:application/octet-stream;base64,{b64_pdf}" download="rental_estimate.pdf">📄 Download PDF</a>'
+        st.markdown(href, unsafe_allow_html=True)
+    
+    # Option for PDF download
+    download_pdf_button()
+
     # Option for new entry, goes back to input page
     if st.button("Estimate Another Property"):
         st.session_state.page = "input"
         st.experimental_rerun()
-
-# look if we can make a pdf download button

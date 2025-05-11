@@ -1,10 +1,11 @@
-streamlit==1.33.0 # for st.experimental_rerun function
+streamlit==1.33.0 # For st.experimental_rerun function
 requests
 folium
 streamlit-folium
-scikit-learn==1.5.1 # for consistency in .pkl file genaration
+scikit-learn==1.5.1 # For consistency in .pkl file genaration
 joblib
 numpy
 pandas
 matplotlib
 geopy
+fpdf==2.7.8 # Allows PDF download
