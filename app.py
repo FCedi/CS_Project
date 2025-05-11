@@ -98,7 +98,7 @@ if st.session_state.page == "welcome":
 
     if st.button("Let's Start"):
         st.session_state.page = "input"
-        st.experimental_rerun()
+        st.rerun()
     
     st.caption("This program is currently in development and only trained on apartments in Geneva, Zürich, Lausanne, and St. Gallen.")
 
@@ -144,7 +144,7 @@ if st.session_state.page == "input":
         st.session_state.amenities = amenities
         st.session_state.radius = radius
         st.session_state.page = "result"
-        st.experimental_rerun()
+        st.rerun()
 
 
 # RESULT PAGE
@@ -164,7 +164,7 @@ if st.session_state.page == "result":
     # Edit button to return to input page
     if st.button("🔄 Edit Property Details"):
         st.session_state.page = "input"
-        st.experimental_rerun()
+        st.rerun()
 
     col1, col2 = st.columns(2)
 
@@ -338,4 +338,4 @@ if st.session_state.page == "result":
     # Option for new entry, goes back to input page
     if st.button("Estimate Another Property"):
         st.session_state.page = "input"
-        st.experimental_rerun()
+        st.rerun()
