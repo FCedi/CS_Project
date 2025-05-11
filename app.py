@@ -276,6 +276,7 @@ if st.session_state.page == "result":
         }])
 
     estimated_price = model.predict(features)[0]
+    st.session_state.estimated_price = estimated_price # Saves the estimated price
 
     col1, col2 = st.columns(2)
 
