@@ -266,7 +266,7 @@ else:
 
     # Create input DataFrame for prediction
     features = pd.DataFrame([{
-        "ZIP": float(st.session_state.zip_code),
+        "ZIP": float(st.session_state.zip_code) if st.session_state.zip_code else 0.0,
         "number_of_rooms": st.session_state.rooms,
         "square_meters": st.session_state.size,
         "place_type": "Apartment",
