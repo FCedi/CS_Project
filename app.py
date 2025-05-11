@@ -163,7 +163,10 @@ if st.session_state.page == "result":
     st.write(f"**Recently Renovated:** {st.session_state.is_renovated}")
     st.write(f"**Parking:** {st.session_state.parking}")
     
-    # Add an "Edit Property Details" button to go back to input page
+    # Edit button to return to input page
+    if st.button("🔄 Edit Property Details"):
+        st.session_state.page = "input"
+        st.experimental_rerun()
 
     col1, col2 = st.columns(2)
 
@@ -214,6 +217,39 @@ if st.session_state.page == "result":
 
         # Add Distances to close by ameneties
         st.subheader("🏬 Distance to selected Amenities")
+
+        if lat and lon and st.session_state.amenities:
+            for amenity in st.session_state.amenities:
+                query = f"""
+                [out:json];
+                (
+                node["amenity"="{amenity.lower()}"](around:{st.session_state.radius},{lat},{lon});
+                way["amenity"="{amenity.lower()}"](around:{st.session_state.radius},{lat},{lon});
+                relation["amenity"="{amenity.lower()}"](around:{st.session_state.radius},{lat},{lon});
+                );
+                out center;
+                """
+                try:
+                    response = requests.post("https://overpass-api.de/api/interpreter", data=query, timeout=30)
+                    data = response.json().get("elements", [])
+                    distances = []
+
+                    for el in data:
+                        el_lat = el.get("lat") or el.get("center", {}).get("lat")
+                        el_lon = el.get("lon") or el.get("center", {}).get("lon")
+                        if el_lat and el_lon:
+                            dist = geodesic((lat, lon), (el_lat, el_lon)).meters
+                            name = el.get("tags", {}).get("name", "Unnamed")
+                            distances.append((name, int(dist)))
+
+                    distances = sorted(distances, key=lambda x: x[1])[:3]
+                    for name, dist in distances:
+                        st.write(f"🔹 {amenity.title()}: **{name}** — {dist} m")
+
+                except Exception as e:
+                    st.error(f"Error retrieving {amenity.title()}: {e}")
+else:
+    st.info("No amenities selected or location could not be determined.")
 
     # Market price calculation with average price per m2 per year comparison
     selected_city = st.session_state.city
