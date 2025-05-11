@@ -178,7 +178,7 @@ if st.session_state.page == "result":
             m = folium.Map(location=[lat, lon], zoom_start=15)
             folium.Marker([
                 lat, lon
-            ], tooltip="Your Property", icon=folium.Icon(color='blue')).add_to(m)
+            ], tooltip="Your Property", icon=folium.Icon(color="blue", icon="home", prefix='fa')).add_to(m)
 
             # Display amenities
             geolocator = Nominatim(user_agent='streamlit_app')
