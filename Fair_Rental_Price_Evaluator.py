@@ -217,8 +217,6 @@ if st.session_state.page == "result":
 
     submitted = st.form_submit_button("Estimate a Fair Rent")
     
-    st.rerun()
-
     col1, col2 = st.columns(2)
 
     with col1:  # left side of the page
