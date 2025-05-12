@@ -88,14 +88,13 @@ if st.session_state.page == "welcome":
     
     # display on the welcome page
     st.write("""
-        **Are you relocating to a new city and want to know if you have a good deal?**\n
-        With so many real estate platforms available it's hard to see if you have a good offer infront of you and where exactly you will be located\
-        in the new city and what is close to you.\n
-        For this we developed this this app gives you a fair price range for your apartment based on the size of your new apartment and some features\
-        such as outdoor space,recent renovations and parking opportunities. Additionaly it will give you a comparison on what you are paying per square\
-        meter and what the average in your city is.\n
-        If you want to see the distance to a spesific location like a place of work or a university, select the Spesific Amenities Finder in the side\
-        menu.
+        **Are you relocating to a new city and want to know if you’re getting a good deal?**\n
+        With so many real estate platforms available, it's hard to tell if you have a good offer in front of you, where exactly you'll be located in \
+        the new city, and what is nearby.\n
+        To help with this, we developed an app that gives you a fair price range for your apartment based on its size and features such as outdoor \
+        space, recent renovations, and parking availability. Additionally, it provides a comparison between your price per square meter and the city \
+        average.\n
+        If you want to see the distance to a specific location like your workplace or university, select the Specific Amenities Finder in the side menu.
     """)
 
     if st.button("Let's Start"):
