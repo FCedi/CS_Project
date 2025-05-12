@@ -7,8 +7,8 @@ import folium #enable the creation of a map in separate html file
 import streamlit.components.v1 as components #to be able to create a custom compenent, here our display map https://docs.streamlit.io/develop/concepts/custom-components/intro
 
 #set page title using https://docs.streamlit.io/ examples
-st.set_page_config(page_title='Spesific Amenities Finder', layout='centered')
-st.title('Spesific Amenities :red[Finder]')
+st.set_page_config(page_title='Specific Amenities Finder', layout='centered')
+st.title('Specific Amenities :red[Finder]')
 
 #storing follow up infos in the map
 if "map_html" not in st.session_state:
@@ -23,12 +23,12 @@ zip_code = st.text_input('ZIP Code')
 city = st.text_input('City')
 
 #Input section : Potential precise location customer want to measure distance to, again https://docs.streamlit.io/
-st.header('Add a Spesific Location to Assess Distance')
+st.header('Add a Specific Location to Assess Distance')
 st.write('Enter the address of a specific location, like your new place of work or your university, to see the distance from your apartment.')
-compare_street = st.text_input('Spesific Street')
-compare_house_number = st.text_input('Spesific House Number')
-compare_zip_code = st.text_input('Spesific ZIP Code')
-compare_city = st.text_input('Spesific City')
+compare_street = st.text_input('Specific Street')
+compare_house_number = st.text_input('Specific House Number')
+compare_zip_code = st.text_input('Specific ZIP Code')
+compare_city = st.text_input('Specific City')
 
 #
 if st.button('Compare Distance'):
