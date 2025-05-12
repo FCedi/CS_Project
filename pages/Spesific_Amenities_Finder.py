@@ -23,21 +23,21 @@ zip_code = st.text_input('ZIP Code')
 city = st.text_input('City')
 
 #Input section : Potential precise location customer want to measure distance to, again https://docs.streamlit.io/
-st.header('Add a Target Location to Assess Distance')
-compare_street = st.text_input('Target Street')
-compare_house_number = st.text_input('Target House Number')
-compare_zip_code = st.text_input('Target ZIP Code')
-compare_city = st.text_input('Target City')
+st.header('Add a Spesific Location to Assess Distance')
+compare_street = st.text_input('Spesific Street')
+compare_house_number = st.text_input('Spesific House Number')
+compare_zip_code = st.text_input('Spesific ZIP Code')
+compare_city = st.text_input('Spesific City')
 
 #Buttons to select critical amenities the customers want around his flat
-st.header('Select Amenities')
+### st.header('Select Amenities')
 #create a dictionnary and assign user friendly amenities
 amenity_config = {
-    "Supermarket": "shop",
-    "School": "amenity",
-    "Hospital": "amenity",
-    "Pharmacy": "amenity",
-    "Restaurant": "amenity"
+    ### "Supermarket": "shop",
+    ### "School": "amenity",
+    ### "Hospital": "amenity",
+    ### "Pharmacy": "amenity",
+    ### "Restaurant": "amenity"
 }
 selected_amenities = [] #create an empty list for user amenities
 
