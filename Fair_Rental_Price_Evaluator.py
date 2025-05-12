@@ -6,7 +6,7 @@ import joblib
 import pandas as pd
 import numpy as np
 import os
-import matplotlib.pyplot as plt # For Diagram
+import matplotlib.pyplot as plt # For Diagrams
 import math
 from geopy.geocoders import Nominatim # For Amenities
 from geopy.distance import geodesic
@@ -359,13 +359,42 @@ if st.session_state.page == "result":
             st.warning("No market price data available for this city.")
 
     with col2: # right side display below the distande of the Amenities
+        
+        # Load model and diagnostic data
+        model = joblib.load("price_estimator.pkl")
+        X_test, y_test, y = joblib.load("model_diagnostics.pkl")
 
-        lower_bound = int(estimated_price * 0.9)
-        upper_bound = int(estimated_price * 1.1)
+        # Predict on test set
+        y_test_pred = model.predict(X_test)
 
-        st.subheader("💰 Estimated Price Range")
-        st.write(f"CHF {lower_bound:,} - CHF {upper_bound:,}")
-        st.write(f" ➡️ Estimated Price: **CHF {int(estimated_price):,}**")
+        # Plotting
+        import matplotlib.pyplot as plt
+
+        fig, ax = plt.subplots(figsize=(8, 6))
+        ax.scatter(y_test, y_test_pred, alpha=0.6, label="Test Data", color='blue')
+
+        # Diagonal (perfect prediction)
+        ax.plot([y.min(), y.max()], [y.min(), y.max()], 'r--', label="Perfect Prediction")
+
+        # Plot your prediction (replace `user_pred` with your value)
+        user_pred = st.session_state.estimated_price
+        ax.scatter([user_pred], [user_pred], color='red', s=100, marker='*', label="Your Apartment")
+
+        ax.set_xlabel("Actual Rent Price (CHF)")
+        ax.set_ylabel("Predicted Rent Price (CHF)")
+        ax.set_title("📊 Predicted vs. Actual Rent Price")
+        ax.legend()
+        ax.grid(True)
+
+        st.pyplot(fig)
+        
+    lower_bound = int(estimated_price * 0.9)
+    upper_bound = int(estimated_price * 1.1)
+
+    st.subheader("💰 Estimated Price Range")
+    st.write(f"CHF {lower_bound:,} - CHF {upper_bound:,}")
+    st.write(f" ➡️ Estimated Price: **CHF {int(estimated_price):,}**")
+
 
     # Option for new entry, goes back to input page
     if st.button("Estimate Another Property"):

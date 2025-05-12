@@ -90,5 +90,11 @@ y_pred = model_pipeline.predict(X_test)
 rmse = mean_squared_error(y_test, y_pred, squared=False)
 print(f"✅ Unified Model trained. RMSE: CHF {rmse:,.2f}")
 
+# model for the price estiomation
 joblib.dump(model_pipeline, "price_estimator.pkl")
+
+# Data required for the diagram
+joblib.dump((X_test, y_test, y), "model_diagnostics.pkl")
+
 print("📦 Model saved as 'price_estimator.pkl'")
+print("📊 Diagnostics saved as 'model_diagnostics.pkl'")
