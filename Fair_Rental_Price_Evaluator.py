@@ -36,6 +36,8 @@ if "amenities" not in st.session_state:
 if "radius" not in st.session_state:
     st.session_state.radius = 300
 
+st.set_page_config(page_title="Fair Rental Price Evaluator", layout="wide")
+
 # Load model (price estimator)
 @st.cache_resource
 def load_model():
@@ -81,8 +83,6 @@ if "page" not in st.session_state:
 
 
 # WELCOME PAGE
-st.set_page_config(page_title="Fair Rental Price Evaluator", layout="wide")
-
 if st.session_state.page == "welcome":
     st.title("🏡 Fair Rental Price Evaluator")
     
