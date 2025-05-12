@@ -349,7 +349,7 @@ if st.session_state.page == "result":
             labels = ['Your Property', 'Market Average in your City']
             values = [user_m2_price_year, market_price_m2_y]
 
-            fig, ax = plt.subplots(figsize=(6, 4))
+            fig, ax = plt.subplots(figsize=(8, 6))
             bars = ax.bar(labels, values, color=["green", "blue"])
             ax.set_ylabel("CHF per m² per year")
             ax.set_title("Price per m²/year Comparison")
@@ -381,7 +381,7 @@ if st.session_state.page == "result":
             # Plot
             import matplotlib.pyplot as plt
 
-            plt.figure(figsize=(6, 4))
+            plt.figure(figsize=(8, 6))
             plt.scatter(y_test, y_pred, alpha=0.6, label='Model Predictions')
             plt.plot([min(y_test), max(y_test)], [min(y_test), max(y_test)], 'r--', label='Perfect Prediction')
 
