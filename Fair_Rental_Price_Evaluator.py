@@ -299,8 +299,6 @@ if st.session_state.page == "result":
 
             except Exception as e:
                 st.error(f"Error retrieving {amenity.title()}: {e}")
-            else:
-                st.info("No amenities selected or location could not be determined.")
 
     # Market price calculation with average price per m2 per year comparison
     selected_city = st.session_state.city
