@@ -367,6 +367,8 @@ if st.session_state.page == "result":
 
     with col2: # right side display below the distande of the Amenities
         
+        st.subheader("💰Your Rent VS Our Model🧠")
+
         # Load diagnostics
         X_test, y_test, _ = joblib.load("model_diagnostics.pkl")
         y_pred = model_pipeline.predict(X_test)
@@ -379,12 +381,12 @@ if st.session_state.page == "result":
             # Plot
             import matplotlib.pyplot as plt
 
-            plt.figure(figsize=(8, 6))
+            plt.figure(figsize=(6, 4))
             plt.scatter(y_test, y_pred, alpha=0.6, label='Model Predictions')
             plt.plot([min(y_test), max(y_test)], [min(y_test), max(y_test)], 'r--', label='Perfect Prediction')
 
             # Add user point
-            plt.scatter(actual, predicted, color='green', s=100, label='Entered Apartment')
+            plt.scatter(actual, predicted, color='red', s=100, label='Entered Apartment')
             plt.xlabel("Actual Rent (CHF)")
             plt.ylabel("Predicted Rent (CHF)")
             plt.title("Predicted vs. Actual Rent Price")
