@@ -287,26 +287,6 @@ if st.session_state.page == "result":
 
             st.subheader("📦 Price per m² per Year Comparison")
 
-            # analyse inputs from input page and prep for estimation
-            outdoor_flag = 0 if st.session_state.outdoor_space == "No" else 1
-            renovated_flag = 1 if st.session_state.is_renovated == "Yes" else 0
-            parking_flag = 0
-            if st.session_state.parking == "Parking Outdoor":
-                parking_flag = 1
-            elif st.session_state.parking == "Garage":
-                parking_flag = 2
-
-            # Create input DataFrame for prediction
-            features = pd.DataFrame([{
-                "ZIP": float(st.session_state.zip_code),
-                "number_of_rooms": st.session_state.rooms,
-                "square_meters": st.session_state.size,
-                "place_type": "Apartment",
-                "Is_Renovated_or_New": renovated_flag,
-                "Has_Parking": parking_flag,
-                "Has_Outdoor_Space": outdoor_flag
-        }])
-
             user_m2_price_year = (estimated_price / st.session_state.size) * 12
 
             labels = ['Your Property', 'Market Average in your City']
