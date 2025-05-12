@@ -165,7 +165,6 @@ if st.session_state.page == "result":
     
     # Edit button to return to input page
     if st.button("🔄 Edit Property Details"):
-        st.session_state.page = "input"
 
         if st.session_state.page == "input":
             st.session_state.page = "input"
