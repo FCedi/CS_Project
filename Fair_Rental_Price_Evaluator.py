@@ -166,7 +166,57 @@ if st.session_state.page == "result":
     # Edit button to return to input page
     if st.button("🔄 Edit Property Details"):
         st.session_state.page = "input"
-        st.rerun()
+        with st.form("property_form"):
+            st.header("📍 Address")
+            street = st.text_input("Street and House Number", value=st.session_state.address)
+            zip_code = st.text_input("ZIP Code", max_chars=4, value=st.session_state.zip_code)
+            city = st.text_input("City", value=st.session_state.city)
+
+    st.header("🏠 Property Details")
+    size = st.number_input(
+        "Property Size (m²)",
+        min_value=10,
+        max_value=1000,
+        step=5,
+        value=st.session_state.size if st.session_state.size else 100
+    )
+    rooms = st.number_input(
+        "Number of Rooms",
+        min_value=1.0,
+        max_value=20.0,
+        step=0.5,
+        value=st.session_state.rooms if st.session_state.rooms else 3.0
+    )
+
+    st.header("✨ Features")
+    outdoor_space = st.selectbox(
+        "Outdoor Space",
+        ["No", "Balcony", "Terrace", "Roof Terrace", "Garden"],
+        index=["No", "Balcony", "Terrace", "Roof Terrace", "Garden"].index(st.session_state.outdoor_space)
+    )
+    is_renovated = st.radio(
+        "Is the property new or recently renovated (last 5 years)?",
+        ["Yes", "No"],
+        index=["Yes", "No"].index(st.session_state.is_renovated)
+    )
+    parking = st.selectbox(
+        "Does the property include a parking space?",
+        ["No", "Parking Outdoor", "Garage"],
+        index=["No", "Parking Outdoor", "Garage"].index(st.session_state.parking)
+    )
+
+    st.header("🏬 Amenities")
+    amenity_options = ["Supermarket", "School", "Hospital", "Pharmacy", "Restaurant"]
+    amenities = [
+        a for a in amenity_options
+        if st.checkbox(a, key=f"chk_{a}", value=(a in st.session_state.amenities))
+    ]
+    radius = st.slider(
+        "Search Radius in meters", 100, 3000, 500, value=st.session_state.radius
+    )
+
+    submitted = st.form_submit_button("Estimate a Fair Rent")
+    st.rerun()
 
     col1, col2 = st.columns(2)
 
