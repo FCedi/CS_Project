@@ -44,6 +44,7 @@ def load_model():
     return joblib.load("price_estimator.pkl")
 
 model = load_model()
+model_pipeline = joblib.load("price_estimator.pkl")
 
 # OpenStreetMap API
 # gets latitude and longitude from address input
@@ -120,6 +121,8 @@ if st.session_state.page == "input":
         st.header("🏠 Property Details")
         size = st.number_input("Property Size (m²)", min_value=10, max_value=1000, step=5, value=100)
         rooms = st.number_input("Number of Rooms", min_value=1.0, max_value=20.0, step=0.5, value=3.0)
+        demanded_rent = st.number_input("Demanded Rent (CHF)", min_value=100, max_value=20000, value=1500)
+        st.caption("Please enter the rent rounded in CHF.")
 
         st.header("✨ Features")
         outdoor_space = st.selectbox("Outdoor Space", ["No", "Balcony", "Terrace", "Roof Terrace", "Garden"])
@@ -140,6 +143,7 @@ if st.session_state.page == "input":
         st.session_state.city = city
         st.session_state.size = size
         st.session_state.rooms = rooms
+        st.session_state.demanded_rent = demanded_rent
         st.session_state.outdoor_space = outdoor_space
         st.session_state.is_renovated = is_renovated
         st.session_state.parking = parking
@@ -159,6 +163,7 @@ if st.session_state.page == "result":
     st.write(f"**Address:** {st.session_state.address}, {st.session_state.zip_code} {st.session_state.city}")
     st.write(f"**Size:** {st.session_state.size} m²")
     st.write(f"**Rooms:** {st.session_state.rooms}")
+    st.write(f"**Demanded Rent**{st.session_state.demanded_rent}CHF")
     st.write(f"**Outdoor Space:** {st.session_state.outdoor_space}")
     st.write(f"**Recently Renovated:** {st.session_state.is_renovated}")
     st.write(f"**Parking:** {st.session_state.parking}")
@@ -179,6 +184,7 @@ if st.session_state.page == "result":
             st.header("🏠 Property Details")
             size = st.number_input("Property Size (m²)", min_value=10, max_value=1000, step=5, value=st.session_state.size or 100)
             rooms = st.number_input("Number of Rooms", min_value=1.0, max_value=20.0, step=0.5, value=st.session_state.rooms or 3.0)
+            demanded_rent = st.number_input("Demanded Rent (CHF)", min_value=100, max_value=20000, value=st.session_state.demanded_rent or 1500)
 
             st.header("✨ Features")
             outdoor_space = st.selectbox("Outdoor Space", ["No", "Balcony", "Terrace", "Roof Terrace", "Garden"],
@@ -203,6 +209,7 @@ if st.session_state.page == "result":
             st.session_state.city = city
             st.session_state.size = size
             st.session_state.rooms = rooms
+            st.session_state.demanded_rent = demanded_rent
             st.session_state.outdoor_space = outdoor_space
             st.session_state.is_renovated = is_renovated
             st.session_state.parking = parking
@@ -360,33 +367,29 @@ if st.session_state.page == "result":
 
     with col2: # right side display below the distande of the Amenities
         
-        # Load model and diagnostic data
-        model = joblib.load("price_estimator.pkl")
-        X_test, y_test, y = joblib.load("model_diagnostics.pkl")
+        # Load diagnostics
+        X_test, y_test, _ = joblib.load("model_diagnostics.pkl")
+        y_pred = model_pipeline.predict(X_test)
 
-        # Predict on test set
-        y_test_pred = model.predict(X_test)
+        # Add user's data point
+        if "demanded_rent" in st.session_state and st.session_state.demanded_rent > 0:
+            actual = st.session_state.demanded_rent
+            predicted = st.session_state.estimated_price
 
-        # Plotting
-        import matplotlib.pyplot as plt
+            # Plot
+            import matplotlib.pyplot as plt
 
-        fig, ax = plt.subplots(figsize=(8, 6))
-        ax.scatter(y_test, y_test_pred, alpha=0.6, label="Test Data", color='blue')
+            plt.figure(figsize=(8, 6))
+            plt.scatter(y_test, y_pred, alpha=0.6, label='Model Predictions')
+            plt.plot([min(y_test), max(y_test)], [min(y_test), max(y_test)], 'r--', label='Perfect Prediction')
 
-        # Diagonal (perfect prediction)
-        ax.plot([y.min(), y.max()], [y.min(), y.max()], 'r--', label="Perfect Prediction")
-
-        # Plot your prediction (replace `user_pred` with your value)
-        user_pred = st.session_state.estimated_price
-        ax.scatter([user_pred], [user_pred], color='red', s=100, marker='*', label="Your Apartment")
-
-        ax.set_xlabel("Actual Rent Price (CHF)")
-        ax.set_ylabel("Predicted Rent Price (CHF)")
-        ax.set_title("📊 Predicted vs. Actual Rent Price")
-        ax.legend()
-        ax.grid(True)
-
-        st.pyplot(fig)
+            # Add user point
+            plt.scatter(actual, predicted, color='green', s=100, label='Entered Apartment')
+            plt.xlabel("Actual Rent (CHF)")
+            plt.ylabel("Predicted Rent (CHF)")
+            plt.title("Predicted vs. Actual Rent Price")
+            plt.legend()
+            st.pyplot(plt)
         
     lower_bound = int(estimated_price * 0.9)
     upper_bound = int(estimated_price * 1.1)
