@@ -257,39 +257,48 @@ if st.session_state.page == "result":
 
     with col2: # right side of the page 
 
-        # Add Distances to close by ameneties
         st.subheader("🏬 Distance to selected Amenities")
 
         if lat and lon and st.session_state.amenities:
-            for amenity in st.session_state.amenities:
-                query = f"""
-                [out:json];
-                (
-                node["amenity"="{amenity.lower()}"](around:{st.session_state.radius},{lat},{lon});
-                way["amenity"="{amenity.lower()}"](around:{st.session_state.radius},{lat},{lon});
-                relation["amenity"="{amenity.lower()}"](around:{st.session_state.radius},{lat},{lon});
-                );
-                out center;
-                """
-                try:
-                    response = requests.post("https://overpass-api.de/api/interpreter", data=query, timeout=30)
-                    data = response.json().get("elements", [])
-                    distances = []
+            total_displayed = 0  # Counter to limit overall output
+            max_results = 7
 
-                    for el in data:
-                        el_lat = el.get("lat") or el.get("center", {}).get("lat")
-                        el_lon = el.get("lon") or el.get("center", {}).get("lon")
-                        if el_lat and el_lon:
-                            dist = geodesic((lat, lon), (el_lat, el_lon)).meters
-                            name = el.get("tags", {}).get("name", "Unnamed")
-                            distances.append((name, int(dist)))
+        for amenity in st.session_state.amenities:
+            if total_displayed >= max_results:
+                break  # Stop if max results shown, otherwise big gap between the results
 
-                    distances = sorted(distances, key=lambda x: x[1])[:3]
-                    for name, dist in distances:
-                        st.write(f"🔹 {amenity.title()}: **{name}** — {dist} m")
+            query = f"""
+            [out:json];
+            (
+            node["amenity"="{amenity.lower()}"](around:{st.session_state.radius},{lat},{lon});
+            way["amenity"="{amenity.lower()}"](around:{st.session_state.radius},{lat},{lon});
+            relation["amenity"="{amenity.lower()}"](around:{st.session_state.radius},{lat},{lon});
+            );
+            out center;
+            """
+            try: # accesses the Overpass-API to measure the distance
+                response = requests.post("https://overpass-api.de/api/interpreter", data=query, timeout=30)
+                data = response.json().get("elements", [])
+                distances = []
 
-                except Exception as e:
-                    st.error(f"Error retrieving {amenity.title()}: {e}")
+                for el in data:
+                    el_lat = el.get("lat") or el.get("center", {}).get("lat")
+                    el_lon = el.get("lon") or el.get("center", {}).get("lon")
+                    if el_lat and el_lon:
+                        dist = geodesic((lat, lon), (el_lat, el_lon)).meters # measures data in meters
+                        name = el.get("tags", {}).get("name", "Unnamed")
+                        distances.append((name, int(dist)))
+
+                distances = sorted(distances, key=lambda x: x[1])[:3]
+
+                for name, dist in distances:
+                    if total_displayed >= max_results:
+                        break
+                    st.write(f"🔹 {amenity.title()}: **{name}** — {dist} m")
+                    total_displayed += 1
+
+            except Exception as e:
+                st.error(f"Error retrieving {amenity.title()}: {e}")
         else:
             st.info("No amenities selected or location could not be determined.")
 
