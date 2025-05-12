@@ -156,14 +156,14 @@ if st.session_state.page == "input":
 # RESULT PAGE
 if st.session_state.page == "result":
 
-    st.title("🏷️ Estimated Price")
+    st.title("🏷️ Fair Estimated Rent")
 
     # Show entered data from input page
     st.subheader("Property Details")
     st.write(f"**Address:** {st.session_state.address}, {st.session_state.zip_code} {st.session_state.city}")
     st.write(f"**Size:** {st.session_state.size} m²")
     st.write(f"**Rooms:** {st.session_state.rooms}")
-    st.write(f"**Demanded Rent**{st.session_state.demanded_rent}CHF")
+    st.write(f"**Demanded Rent:** {st.session_state.demanded_rent}CHF")
     st.write(f"**Outdoor Space:** {st.session_state.outdoor_space}")
     st.write(f"**Recently Renovated:** {st.session_state.is_renovated}")
     st.write(f"**Parking:** {st.session_state.parking}")
