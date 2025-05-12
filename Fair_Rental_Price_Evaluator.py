@@ -102,7 +102,7 @@ if st.session_state.page == "welcome":
         st.session_state.page = "input"
         st.rerun()
     
-    st.caption("This program is currently in development and only trained on apartments in Geneva, Zürich, Lausanne, and St. Gallen.")
+    st.caption("This program is currently in development and only trained on apartments in Geneva, Zurich, Lausanne, and St. Gallen.")
 
 
 # INPUT PAGE
