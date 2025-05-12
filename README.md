@@ -3,7 +3,7 @@
 This the CS Project of Group 07.10
 
 This program provides you with a comparable rental price estimate for your apartment or house in **Geneva, Zürich, Lausanne, or St. Gallen**.
-
+it also enables you to locate key amenities around your new potential flat, and to calculate the distance to one key points of your choice (workplace/university ...)
 It uses machine learning based on historical rental listings to predict a price range (+- 10%) for your unit.
 
 ## 🎯 Key Features
@@ -17,6 +17,7 @@ It uses machine learning based on historical rental listings to predict a price 
   - Parking availability (garage, outdoor parking, or none)
 - Visual map of the property location
 - Rental price range (+- 10%) and estimated exact price (bold and centered)
+- A key amenities features that enables you to locate point of interest arounf your potential new flat using overspeed api and openstreetmap
 
 ## 🛠️ Installation
 
