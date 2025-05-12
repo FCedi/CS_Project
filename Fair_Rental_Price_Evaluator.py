@@ -212,7 +212,7 @@ if st.session_state.page == "result":
         if st.checkbox(a, key=f"chk_{a}", value=(a in st.session_state.amenities))
     ]
     radius = st.slider(
-        "Search Radius in meters", 100, 3000, 500, value=st.session_state.radius
+    "Search Radius in meters", min_value=100, max_value=3000, step=100, value=st.session_state.radius
     )
 
     submitted = st.form_submit_button("Estimate a Fair Rent")
