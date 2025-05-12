@@ -166,6 +166,8 @@ if st.session_state.page == "result":
     # Edit button to return to input page
     if st.button("🔄 Edit Property Details"):
         st.session_state.page = "input"
+        st.rerun()
+        
         with st.form("property_form"):
             st.header("📍 Address")
             street = st.text_input("Street and House Number", value=st.session_state.address)
