@@ -49,7 +49,6 @@ data = data.dropna(subset=required_columns)
 print("Remaining rows after cleaning:", len(data))
 
 # Price influencing keyword detection in characteristics columns 
-
 def detect_feature(row, keywords):
     values = [str(row['char.1']).lower(), str(row['char.2']).lower(), str(row['char.3']).lower()]
     return int(any(any(k in v for k in keywords) for v in values))
@@ -58,7 +57,7 @@ def detect_feature(row, keywords):
 outdoor_keywords = ["terrace", "balcony", "garden", "patio", "loggia", "roof terrace", "outdoor"]
 data['Has_Outdoor_Space'] = data.apply(lambda row: detect_feature(row, outdoor_keywords), axis=1)
 
-# Renovated/New/Modern
+# Renovated/New
 modern_keywords = ["renovated", "new", "modern", "modern kitchen", "luxury"]
 data['Is_Renovated_or_New'] = data.apply(lambda row: detect_feature(row, modern_keywords), axis=1)
 

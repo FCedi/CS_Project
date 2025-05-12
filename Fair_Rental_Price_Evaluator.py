@@ -323,7 +323,7 @@ if st.session_state.page == "result":
 
     col1, col2 = st.columns(2)
 
-    with col1:
+    with col1: # left side display below the Map
         if market_price_m2_y is not None and not math.isnan(market_price_m2_y):
 
             market_estimated_price = (market_price_m2_y / 12) * st.session_state.size
@@ -351,7 +351,7 @@ if st.session_state.page == "result":
         else:
             st.warning("No market price data available for this city.")
 
-    with col2:
+    with col2: # right side display below the distande of the Amenities
 
         lower_bound = int(estimated_price * 0.9)
         upper_bound = int(estimated_price * 1.1)
