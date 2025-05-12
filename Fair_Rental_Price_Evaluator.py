@@ -36,8 +36,6 @@ if "amenities" not in st.session_state:
 if "radius" not in st.session_state:
     st.session_state.radius = 300
 
-st.set_page_config(page_title="Fair Rental Price Assessor", layout="wide")
-
 # Load model (price estimator)
 @st.cache_resource
 def load_model():
@@ -83,17 +81,21 @@ if "page" not in st.session_state:
 
 
 # WELCOME PAGE
+st.set_page_config(page_title="Fair Rental Price Evaluator", layout="wide")
+
 if st.session_state.page == "welcome":
-    st.title("🏡 Fair Rental Price Assessor")
+    st.title("🏡 Fair Rental Price Evaluator")
     
     # display on the welcome page
     st.write("""
         **Are you relocating to a new city and want to know if you have a good deal?**\n
         With so many real estate platforms available it's hard to see if you have a good offer infront of you and where exactly you will be located\
-        in the new city and what is close to you.
+        in the new city and what is close to you.\n
         For this we developed this this app gives you a fair price range for your apartment based on the size of your new apartment and some features\
         such as outdoor space,recent renovations and parking opportunities. Additionaly it will give you a comparison on what you are paying per square\
-        meter and what the average in your city is.
+        meter and what the average in your city is.\n
+        If you want to see the distance to a spesific location like a place of work or a university, select the Spesific Amenities Finder in the side\
+        menu.
     """)
 
     if st.button("Let's Start"):
@@ -204,7 +206,7 @@ if st.session_state.page == "result":
                             folium.Marker(
                                 [el_lat, el_lon],
                                 tooltip=f"{name} — {dist:.0f} m",
-                                icon=folium.Icon(color='green')
+                                icon=folium.Icon(color='green', icon='info-sign')
                             ).add_to(m)
 
             st_folium(m, width=600, height=400)

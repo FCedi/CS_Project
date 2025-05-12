@@ -24,6 +24,7 @@ city = st.text_input('City')
 
 #Input section : Potential precise location customer want to measure distance to, again https://docs.streamlit.io/
 st.header('Add a Spesific Location to Assess Distance')
+st.write('Enter the address of a specific location, like your new place of work or your university, to see the distance from your apartment.')
 compare_street = st.text_input('Spesific Street')
 compare_house_number = st.text_input('Spesific House Number')
 compare_zip_code = st.text_input('Spesific ZIP Code')
@@ -46,7 +47,7 @@ if st.button('Compare Distance'):
         folium.Marker(
             [lat, lon],
             tooltip='Your Location',
-            icon=folium.Icon(color='blue')
+            icon=folium.Icon(color='blue', icon="home")
         ).add_to(folium_map) #add features found to the map
 
         if compare_street and compare_zip_code and compare_city:
