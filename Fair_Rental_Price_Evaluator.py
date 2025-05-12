@@ -168,7 +168,8 @@ if st.session_state.page == "result":
         st.session_state.page = "input"
 
         if st.session_state.page == "input":
-            st.title("Enter Property Details")
+            st.session_state.page = "input"
+            st.title("Edit Property Details")
 
         with st.form("property_form"):
             st.header("📍 Address")
