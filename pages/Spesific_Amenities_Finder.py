@@ -42,13 +42,13 @@ if st.button('Compare Distance'):
     else:
         lat, lon = location.latitude, location.longitude
         st.success(f'Found your address: {location.address} ({lat:.5f}, {lon:.5f})') #if found assign geoloc values and windows pop
-
+#creating and custmozing app according to input with a marker
         folium_map = folium.Map(location=[lat, lon], zoom_start=14)
         folium.Marker(
             [lat, lon],
             tooltip='Your Location',
             icon=folium.Icon(color='blue', icon="home")
-        ).add_to(folium_map) #add features found to the map
+        ).add_to(folium_map) #add custom marker to the map
 
         if compare_street and compare_zip_code and compare_city:
             compare_address = f'{compare_street} {compare_house_number}, {compare_zip_code} {compare_city}'
