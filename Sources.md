@@ -20,7 +20,6 @@ All Graphics we use are created from the the collected data, no external diagram
 For certain problems we asked ChatGPT for help, these where the cases we used it and what code implementations it lead to:
 - Fair_Rental_Price_Evaluator.py
     - "when I submit the form and am directed to the result page, the results only show for a second and then start to "flicker". How can I prevent this?"
-        
         -> Led to the implementation of ```st.session_state.xy``` to save the entered values when swithcing between pages
 - Specific_Amenities_Finder.py
 - Specific_Amenities_Finder.py

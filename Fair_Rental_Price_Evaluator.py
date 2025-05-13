@@ -45,8 +45,7 @@ st.set_page_config(page_title="Fair Rental Price Evaluator", layout="wide")
 def load_model():
     return joblib.load("price_estimator.pkl")
 
-model = load_model()
-model_pipeline = joblib.load("price_estimator.pkl")
+model_pipeline = load_model()
 
 # OpenStreetMap API
 # gets latitude and longitude from address input
@@ -57,7 +56,7 @@ def get_location(address, zip_code, city, country='CH'):
     
     time.sleep(1)  # pause 1 sec to prevent crashes and too many requests
     
-    response = requests.get(url, headers={'User-Agent': 'MyRentalApp/1.0 (cedric.frutiger@startglobal.org)'})
+    response = requests.get(url, headers={'User-Agent': 'MyRentalApp/1.0 (cedric.frutiger@startglobal.org)'}) # user-agent to prevent api crashes
     if response.status_code != 200:
         return None, None
     data = response.json()
@@ -125,7 +124,7 @@ if st.session_state.page == "input":
         street = st.text_input("Street and House Number")
         zip_code = st.text_input("ZIP Code", max_chars=4)
         city = st.text_input("City")
-        st.caption("Please write the city name the english way (no Ä, Ü, Ö).")
+        st.caption("Please write the city name the english way (NO Ä, Ü, Ö).")
 
         st.header("🏠 Property Details")
         size = st.number_input("Property Size (m²)", min_value=10, max_value=1000, step=5, value=100)
@@ -338,7 +337,7 @@ if st.session_state.page == "result":
         "Has_Outdoor_Space": outdoor_flag
         }])
 
-    estimated_price = model.predict(features)[0]
+    estimated_price = model_pipeline.predict(features)[0]
     st.session_state.estimated_price = estimated_price # Saves the estimated price
 
     col1, col2 = st.columns(2)
