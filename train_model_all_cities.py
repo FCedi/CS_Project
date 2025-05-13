@@ -8,7 +8,7 @@ from sklearn.compose import ColumnTransformer
 from sklearn.metrics import mean_squared_error
 
 # Collect training data from .csv files
-# Add file names HERE to include them in the training data
+# Add file names HERE to include them in the training model
 city_files = ["geneve.csv", "lausanne.csv", "st.gallen.csv", "zurich.csv"]
 
 # Load and merge the different datasets
