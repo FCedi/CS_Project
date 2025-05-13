@@ -277,7 +277,7 @@ if st.session_state.page == "result":
 
     with col2: # right side display below the distande of the Amenities
         
-        st.subheader("💰Your Rent VS Our Model🧠")
+        st.subheader("💰Your Rent In Our Model🧠")
 
         # Load diagnostics
         X_test, y_test, _ = joblib.load("model_diagnostics.pkl")
