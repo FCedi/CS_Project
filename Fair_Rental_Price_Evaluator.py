@@ -167,7 +167,7 @@ if st.session_state.page == "result":
     st.write(f"**Address:** {st.session_state.address}, {st.session_state.zip_code} {st.session_state.city}")
     st.write(f"**Size:** {st.session_state.size} m²")
     st.write(f"**Rooms:** {st.session_state.rooms}")
-    st.write(f"**Demanded Rent:** {st.session_state.demanded_rent}CHF")
+    st.write(f"**Demanded Rent:** {st.session_state.demanded_rent} CHF")
     st.write(f"**Outdoor Space:** {st.session_state.outdoor_space}")
     st.write(f"**Recently Renovated:** {st.session_state.is_renovated}")
     st.write(f"**Parking:** {st.session_state.parking}")
