@@ -28,9 +28,10 @@ For certain problems we asked ChatGPT for help, these where the cases we used it
     - As we wanted to detect different price influencing features in ceveral columns of the csv files, we asked ChatGPT to defin us a function to look for different keywords in defined columns. We asked: "Write a python function to search for different keyword groups in the rows char.1, char.2 and char.3" From this we got a custom function we integrated in our code.
     ```
     def detect_feature(row, keywords):
-    values = [str(row['char.1']).lower(), str(row['char.2']).lower(), str(row['char.3']).lower()]
-    return int(any(any(k in v for k in keywords) for v in values))
+        values = [str(row['char.1']).lower(), str(row['char.2']).lower(), str(row['char.3']).lower()]
+        return int(any(any(k in v for k in keywords) for v in values))
     ```
+    We could define different keywords (`xy_keywords`) and replace `keywords` when recaling the function to detect for these keywords in the defined rows
 - Conversion csv.py
     - After filtering the scraped data (.xlsx files) by hand to have the information we needed to enter it in our training model it didn't work as we excepted. Because there where around 1800 lines of code to filter, we aked ChatGPT to write us a program to filter the .xlsx files and provide a cleaned up CSV file. We provided ChatGPT with the format we needed the CSV to be so we could enter it in our training model.
     In short, ChatGPT build Conversion csv.py based on the format we needed the CSV files to be for our training model.
