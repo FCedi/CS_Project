@@ -205,72 +205,6 @@ if st.session_state.page == "result":
         st.session_state.page = "input"
         st.rerun()
 
-    col1, col2 = st.columns(2)
-
-    with col1:  # left side of the page
-        st.subheader("📍 Property Location & Nearby Amenities")
-
-        # Get location and show location
-        lat, lon = get_location(st.session_state.address, st.session_state.zip_code, st.session_state.city)
-
-        if lat and lon:
-            m = folium.Map(location=[lat, lon], zoom_start=15)
-            folium.Marker([
-                lat, lon
-            ], tooltip="Your Property", icon=folium.Icon(color="blue", icon="home", prefix='fa')).add_to(m)
-
-            # Display amenities
-            geolocator = Nominatim(user_agent='streamlit_app')
-            for amenity in st.session_state.amenities:
-                data = get_amenity_elements(amenity, lat, lon, st.session_state.radius)
-                for el in data[:3]:
-                    el_lat = el.get('lat') or el.get('center', {}).get('lat')
-                    el_lon = el.get('lon') or el.get('center', {}).get('lon')
-                    if el_lat and el_lon:
-                        dist = geodesic((lat, lon), (el_lat, el_lon)).meters
-                        name = el.get('tags', {}).get('name', f"{amenity.title()} (Unnamed)")
-                        folium.Marker(
-                            [el_lat, el_lon],
-                            tooltip=f"{name} — {dist:.0f} m",
-                            icon=folium.Icon(color='green', icon='info-sign')
-                        ).add_to(m)
-
-            st_folium(m, width=600, height=400)
-        else:
-            st.warning("Could not locate your address on the map.")
-
-    with col2:  # right side of the page 
-        st.subheader("🏬 Distance to selected Amenities")
-
-        if lat and lon and st.session_state.amenities:
-            total_displayed = 0  # Counter to limit overall output
-            max_results = 8
-
-            for amenity in st.session_state.amenities:
-                try:
-                    data = get_amenity_elements(amenity, lat, lon, st.session_state.radius)
-                    distances = []
-
-                    for el in data:
-                        el_lat = el.get("lat") or el.get("center", {}).get("lat")
-                        el_lon = el.get("lon") or el.get("center", {}).get("lon")
-                        if el_lat and el_lon:
-                            dist = geodesic((lat, lon), (el_lat, el_lon)).meters
-                            name = el.get("tags", {}).get("name", "Unnamed")
-                            distances.append((name, int(dist)))
-
-                    # Sort and limit top 2 per amenity
-                    distances = sorted(distances, key=lambda x: x[1])[:2]
-
-                    for name, dist in distances:
-                        if total_displayed >= max_results:
-                            break
-                        st.write(f"🔹 {amenity.title()}: **{name}** — {dist} m")
-                        total_displayed += 1
-
-                except Exception as e:
-                    st.error(f"Error retrieving {amenity.title()}: {e}")
-
     # Market price calculation with average price per m2 per year comparison
     user_zip = int(st.session_state.zip_code)
     market_price_m2_y = zip_avg_p_sqm_y.get(user_zip)
@@ -355,7 +289,7 @@ if st.session_state.page == "result":
             plt.title("Predicted vs. Actual Rent Price")
             plt.legend()
             st.pyplot(plt)
-        
+
     lower_bound = int(estimated_price * 0.9)
     upper_bound = int(estimated_price * 1.1)
 
@@ -363,7 +297,72 @@ if st.session_state.page == "result":
     st.write(f"CHF {lower_bound:,} - CHF {upper_bound:,}")
     st.write(f" ➡️ Estimated Price: **CHF {int(estimated_price):,}**")
 
+    col1, col2 = st.columns(2)
 
+    with col1:  # left side of the page
+        st.subheader("📍 Property Location & Nearby Amenities")
+
+        # Get location and show location
+        lat, lon = get_location(st.session_state.address, st.session_state.zip_code, st.session_state.city)
+
+        if lat and lon:
+            m = folium.Map(location=[lat, lon], zoom_start=15)
+            folium.Marker([
+                lat, lon
+            ], tooltip="Your Property", icon=folium.Icon(color="blue", icon="home", prefix='fa')).add_to(m)
+
+            # Display amenities
+            geolocator = Nominatim(user_agent='streamlit_app')
+            for amenity in st.session_state.amenities:
+                data = get_amenity_elements(amenity, lat, lon, st.session_state.radius)
+                for el in data[:3]:
+                    el_lat = el.get('lat') or el.get('center', {}).get('lat')
+                    el_lon = el.get('lon') or el.get('center', {}).get('lon')
+                    if el_lat and el_lon:
+                        dist = geodesic((lat, lon), (el_lat, el_lon)).meters
+                        name = el.get('tags', {}).get('name', f"{amenity.title()} (Unnamed)")
+                        folium.Marker(
+                            [el_lat, el_lon],
+                            tooltip=f"{name} — {dist:.0f} m",
+                            icon=folium.Icon(color='green', icon='info-sign')
+                        ).add_to(m)
+
+            st_folium(m, width=600, height=400)
+        else:
+            st.warning("Could not locate your address on the map.")
+
+    with col2:  # right side of the page 
+        st.subheader("🏬 Distance to selected Amenities")
+
+        if lat and lon and st.session_state.amenities:
+            total_displayed = 0  # Counter to limit overall output
+            max_results = 8
+
+            for amenity in st.session_state.amenities:
+                try:
+                    data = get_amenity_elements(amenity, lat, lon, st.session_state.radius)
+                    distances = []
+
+                    for el in data:
+                        el_lat = el.get("lat") or el.get("center", {}).get("lat")
+                        el_lon = el.get("lon") or el.get("center", {}).get("lon")
+                        if el_lat and el_lon:
+                            dist = geodesic((lat, lon), (el_lat, el_lon)).meters
+                            name = el.get("tags", {}).get("name", "Unnamed")
+                            distances.append((name, int(dist)))
+
+                    # Sort and limit top 2 per amenity
+                    distances = sorted(distances, key=lambda x: x[1])[:2]
+
+                    for name, dist in distances:
+                        if total_displayed >= max_results:
+                            break
+                        st.write(f"🔹 {amenity.title()}: **{name}** — {dist} m")
+                        total_displayed += 1
+
+                except Exception as e:
+                    st.error(f"Error retrieving {amenity.title()}: {e}")
+        
     # Option for new entry, goes back to input page
     if st.button("Estimate Another Property"):
         st.session_state.page = "input"
