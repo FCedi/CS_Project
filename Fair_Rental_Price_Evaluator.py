@@ -69,17 +69,23 @@ def get_amenity_elements(amenity, lat, lon, radius):
     if key in st.session_state:
         return st.session_state[key]
 
-    # on overpass supermarkets are taged as shops, but we want to display supermarkets
-    tag_key = "amenity"
-    if amenity.lower() == "supermarket":
-        tag_key = "shop"
+    # Mapping of user tags to actual OSM tags
+    tag_mapping = {
+        "supermarket": ("shop", "supermarket"),
+        "school": ("amenity", "school"),
+        "hospital": ("amenity", "hospital"),
+        "pharmacy": ("amenity", "pharmacy"),
+        "restaurant": ("amenity", "restaurant")
+    }
+
+    tag_key, tag_value = tag_mapping.get(amenity.lower(), ("amenity", amenity.lower()))
 
     query = f"""
     [out:json];
     (
-      node["{tag_key}"="{amenity.lower()}"](around:{radius},{lat},{lon});
-      way["{tag_key}"="{amenity.lower()}"](around:{radius},{lat},{lon});
-      relation["{tag_key}"="{amenity.lower()}"](around:{radius},{lat},{lon});
+      node["{tag_key}"="{tag_value}"](around:{radius},{lat},{lon});
+      way["{tag_key}"="{tag_value}"](around:{radius},{lat},{lon});
+      relation["{tag_key}"="{tag_value}"](around:{radius},{lat},{lon});
     );
     out center;
     """
