@@ -277,7 +277,7 @@ if st.session_state.page == "result":
 
     with col2: # right side display below the distande of the Amenities
         
-        st.subheader("💰Your Rent In Our Model🧠")
+        st.subheader("💰Your Rent Compared to our Prediction")
 
         # Load diagnostics
         X_test, y_test, _ = joblib.load("model_diagnostics.pkl")
@@ -292,7 +292,7 @@ if st.session_state.page == "result":
             import matplotlib.pyplot as plt
 
             plt.figure(figsize=(8, 6))
-            plt.scatter(y_test, y_pred, alpha=0.6, label='Training Data')
+            plt.scatter(y_test, y_pred, alpha=0.6, label='	Training Data Predictions')
             plt.plot([min(y_test), max(y_test)], [min(y_test), max(y_test)], 'r--', label='Ideal Prediction Line')
 
             # Add user point
