@@ -12,6 +12,7 @@ from geopy.geocoders import Nominatim # For Amenities
 from geopy.distance import geodesic
 import streamlit.components.v1 as components
 import time # helps to prevent API crashes
+import requests # 
 
 #Variables that always exist and prevent crashes when reloading the page at the wrong time
 if "page" not in st.session_state:
@@ -56,7 +57,7 @@ def get_location(address, zip_code, city, country='CH'):
     
     time.sleep(1)  # pause 1 sec to prevent crashes and too many requests
     
-    response = requests.get(url, headers={'User-Agent': 'MyRentalApp/1.0 (you@example.com)'})
+    response = requests.get(url, headers={'User-Agent': 'MyRentalApp/1.0 (cedric.frutiger@startglobal.org)'})
     if response.status_code != 200:
         return None, None
     data = response.json()
