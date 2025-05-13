@@ -30,7 +30,6 @@ compare_house_number = st.text_input('Specific House Number')
 compare_zip_code = st.text_input('Specific ZIP Code')
 compare_city = st.text_input('Specific City')
 
-#
 if st.button('Compare Distance'):
     geolocator = Nominatim(user_agent='streamlit_app') #creating geocoder from geopy https://geopy.readthedocs.io/en/stable/index.html?highlight=user_agent
     full_address = f"{street} {house_number}, {zip_code} {city}" #Combines the address components the user entered into one full string
