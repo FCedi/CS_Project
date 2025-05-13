@@ -179,7 +179,7 @@ if st.session_state.page == "input":
         amenities = [a for a in amenity_options if st.checkbox(a, key=f"chk_{a}")]
         radius = st.slider("Search Radius in meters", 100, 3000, 500)
 
-        submitted = st.form_submit_button("Estimate a Fair Rent")
+        submitted = st.form_submit_button("Compare your Rent")
 
         # Save data to session and go to result page
     if submitted:
@@ -292,8 +292,8 @@ if st.session_state.page == "result":
             import matplotlib.pyplot as plt
 
             plt.figure(figsize=(8, 6))
-            plt.scatter(y_test, y_pred, alpha=0.6, label='Model Predictions')
-            plt.plot([min(y_test), max(y_test)], [min(y_test), max(y_test)], 'r--', label='Perfect Prediction')
+            plt.scatter(y_test, y_pred, alpha=0.6, label='Training Data')
+            plt.plot([min(y_test), max(y_test)], [min(y_test), max(y_test)], 'r--', label='Ideal Prediction Line')
 
             # Add user point
             plt.scatter(actual, predicted, color='red', s=100, label='Entered Apartment')
