@@ -351,8 +351,8 @@ if st.session_state.page == "result":
                             name = el.get("tags", {}).get("name", "Unnamed")
                             distances.append((name, int(dist)))
 
-                    # Sort and limit top 2 per amenity
-                    distances = sorted(distances, key=lambda x: x[1])[:2]
+                    # Sort and limit top 3 per amenity
+                    distances = sorted(distances, key=lambda x: x[1])[:3]
 
                     for name, dist in distances:
                         if total_displayed >= max_results:
