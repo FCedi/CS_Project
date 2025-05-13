@@ -272,9 +272,6 @@ if st.session_state.page == "result":
             max_results = 7
 
         for amenity in st.session_state.amenities:
-            if total_displayed >= max_results:
-                break  # Stop if max results shown, otherwise big gap between the results
-
             query = f"""
             [out:json];
             (
@@ -301,7 +298,7 @@ if st.session_state.page == "result":
 
                 for name, dist in distances:
                     if total_displayed >= max_results:
-                        break
+                        break # Stop if max results shown, otherwise big gap between the results
                     st.write(f"🔹 {amenity.title()}: **{name}** — {dist} m")
                     total_displayed += 1
 
