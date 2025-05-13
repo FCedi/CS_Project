@@ -68,14 +68,18 @@ city_files = {
     "St. Gallen": "st.gallen.csv"
 }
 
-city_avg_p_sqm_y = {}
+zip_avg_p_sqm_y = {}
 for city, filename in city_files.items():
     if os.path.exists(filename):
         df = pd.read_csv(filename, encoding="latin1", sep=";")
+        df[['ZIP', 'City']] = df['zip_city'].str.extract(r'(\d{4})\s*(.*)')
+        df['ZIP'] = pd.to_numeric(df['ZIP'], errors='coerce')
         df['p/squarem/y'] = df['p/squarem/y'].astype(str).str.replace(r"[^\d.]", "", regex=True) # only takes numereical value from p/squarem/y
-        df['p/squarem/y'] = pd.to_numeric(df['p/squarem/y'], errors='coerce') # prevents "No market price data available for this city." output
-        avg = df['p/squarem/y'].mean()  # directly calculates the averag
-        city_avg_p_sqm_y[city] = round(avg, 2)
+        df['p/squarem/y'] = pd.to_numeric(df['p/squarem/y'], errors='coerce')# prevents "No market price data available for this city." output
+        
+        grouped = df.dropna(subset=['ZIP', 'p/squarem/y']).groupby('ZIP')['p/squarem/y'].mean()
+        for zip_code, avg_price in grouped.items():
+            zip_avg_p_sqm_y[int(zip_code)] = round(avg_price, 2)
 
 # Checks for a session state (avoids reruns and errors when displaxint the results)
 # If nothing is found go to welcome page
@@ -306,8 +310,8 @@ if st.session_state.page == "result":
                 st.error(f"Error retrieving {amenity.title()}: {e}")
 
     # Market price calculation with average price per m2 per year comparison
-    selected_city = st.session_state.city
-    market_price_m2_y = city_avg_p_sqm_y.get(selected_city)
+    user_zip = int(st.session_state.zip_code)
+    market_price_m2_y = zip_avg_p_sqm_y.get(user_zip)
 
     # analyse inputs from input page and prep for estimation
     outdoor_flag = 0 if st.session_state.outdoor_space == "No" else 1
@@ -349,7 +353,7 @@ if st.session_state.page == "result":
             fig, ax = plt.subplots(figsize=(8, 6))
             bars = ax.bar(labels, values, color=["green", "blue"])
             ax.set_ylabel("CHF per m² per year")
-            ax.set_title("Price per m²/year Comparison")
+            ax.set_title(f"Price per m²/year Comparison (ZIP {user_zip})")
 
             # Add value labels on bars
             for bar in bars:
