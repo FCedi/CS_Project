@@ -63,6 +63,31 @@ def get_location(address, zip_code, city, country='CH'):
         return float(data[0]['lat']), float(data[0]['lon'])
     return None, None
 
+# helps with consistant amenities display
+def get_amenity_elements(amenity, lat, lon, radius):
+    key = f"amenity_data_{amenity.lower()}"
+    if key in st.session_state:
+        return st.session_state[key]
+
+    query = f"""
+    [out:json];
+    (
+      node["amenity"="{amenity.lower()}"](around:{radius},{lat},{lon});
+      way["amenity"="{amenity.lower()}"](around:{radius},{lat},{lon});
+      relation["amenity"="{amenity.lower()}"](around:{radius},{lat},{lon});
+    );
+    out center;
+    """
+    try:
+        response = requests.post("https://overpass-api.de/api/interpreter", data=query, timeout=30)
+        response.raise_for_status()
+        elements = response.json().get("elements", [])
+        st.session_state[key] = elements
+        return elements
+    except Exception as e:
+        st.error(f"Failed to retrieve amenities for {amenity}: {e}")
+        return []
+
 # Get average price per m2 per year from training csv files
 city_files = {
     "Geneva": "geneve.csv",
@@ -197,75 +222,54 @@ if st.session_state.page == "result":
             # Display amenities
             geolocator = Nominatim(user_agent='streamlit_app')
             for amenity in st.session_state.amenities:
-                query = f"""
-                [out:json];
-                (
-                  node["amenity"="{amenity.lower()}"](around:{st.session_state.radius},{lat},{lon});
-                  way["amenity"="{amenity.lower()}"](around:{st.session_state.radius},{lat},{lon});
-                  relation["amenity"="{amenity.lower()}"](around:{st.session_state.radius},{lat},{lon});
-                );
-                out center;
-                """
-                response = requests.post("https://overpass-api.de/api/interpreter", data=query)
-                if response.ok:
-                    data = response.json().get('elements', [])
-                    for el in data[:3]:
-                        el_lat = el.get('lat') or el.get('center', {}).get('lat')
-                        el_lon = el.get('lon') or el.get('center', {}).get('lon')
-                        if el_lat and el_lon:
-                            dist = geodesic((lat, lon), (el_lat, el_lon)).meters
-                            name = el.get('tags', {}).get('name', f"{amenity.title()} (Unnamed)")
-                            folium.Marker(
-                                [el_lat, el_lon],
-                                tooltip=f"{name} — {dist:.0f} m",
-                                icon=folium.Icon(color='green', icon='info-sign')
-                            ).add_to(m)
+                data = get_amenity_elements(amenity, lat, lon, st.session_state.radius)
+                for el in data[:3]:
+                    el_lat = el.get('lat') or el.get('center', {}).get('lat')
+                    el_lon = el.get('lon') or el.get('center', {}).get('lon')
+                    if el_lat and el_lon:
+                        dist = geodesic((lat, lon), (el_lat, el_lon)).meters
+                        name = el.get('tags', {}).get('name', f"{amenity.title()} (Unnamed)")
+                        folium.Marker(
+                            [el_lat, el_lon],
+                            tooltip=f"{name} — {dist:.0f} m",
+                            icon=folium.Icon(color='green', icon='info-sign')
+                        ).add_to(m)
 
             st_folium(m, width=600, height=400)
         else:
             st.warning("Could not locate your address on the map.")
 
-    with col2: # right side of the page 
-
+    with col2:  # right side of the page 
         st.subheader("🏬 Distance to selected Amenities")
 
         if lat and lon and st.session_state.amenities:
             total_displayed = 0  # Counter to limit overall output
-            max_results = 7
+            max_results = 8
 
-        for amenity in st.session_state.amenities:
-            query = f"""
-            [out:json];
-            (
-            node["amenity"="{amenity.lower()}"](around:{st.session_state.radius},{lat},{lon});
-            way["amenity"="{amenity.lower()}"](around:{st.session_state.radius},{lat},{lon});
-            relation["amenity"="{amenity.lower()}"](around:{st.session_state.radius},{lat},{lon});
-            );
-            out center;
-            """
-            try: # accesses the Overpass-API to measure the distance
-                response = requests.post("https://overpass-api.de/api/interpreter", data=query, timeout=30)
-                data = response.json().get("elements", [])
-                distances = []
+            for amenity in st.session_state.amenities:
+                try:
+                    data = get_amenity_elements(amenity, lat, lon, st.session_state.radius)
+                    distances = []
 
-                for el in data:
-                    el_lat = el.get("lat") or el.get("center", {}).get("lat")
-                    el_lon = el.get("lon") or el.get("center", {}).get("lon")
-                    if el_lat and el_lon:
-                        dist = geodesic((lat, lon), (el_lat, el_lon)).meters # measures data in meters
-                        name = el.get("tags", {}).get("name", "Unnamed")
-                        distances.append((name, int(dist)))
+                    for el in data:
+                        el_lat = el.get("lat") or el.get("center", {}).get("lat")
+                        el_lon = el.get("lon") or el.get("center", {}).get("lon")
+                        if el_lat and el_lon:
+                            dist = geodesic((lat, lon), (el_lat, el_lon)).meters
+                            name = el.get("tags", {}).get("name", "Unnamed")
+                            distances.append((name, int(dist)))
 
-                distances = sorted(distances, key=lambda x: x[1])[:3]
+                    # Sort and limit top 2 per amenity
+                    distances = sorted(distances, key=lambda x: x[1])[:2]
 
-                for name, dist in distances:
-                    if total_displayed >= max_results:
-                        break # Stop if max results shown, otherwise big gap between the results
-                    st.write(f"🔹 {amenity.title()}: **{name}** — {dist} m")
-                    total_displayed += 1
+                    for name, dist in distances:
+                        if total_displayed >= max_results:
+                            break
+                        st.write(f"🔹 {amenity.title()}: **{name}** — {dist} m")
+                        total_displayed += 1
 
-            except Exception as e:
-                st.error(f"Error retrieving {amenity.title()}: {e}")
+                except Exception as e:
+                    st.error(f"Error retrieving {amenity.title()}: {e}")
 
     # Market price calculation with average price per m2 per year comparison
     user_zip = int(st.session_state.zip_code)
