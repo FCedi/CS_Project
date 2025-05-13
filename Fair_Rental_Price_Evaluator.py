@@ -348,7 +348,7 @@ if st.session_state.page == "result":
 
         if lat and lon and st.session_state.amenities:
             total_displayed = 0  # Counter to limit overall output
-            max_results = 8
+            max_results = 9
 
             for amenity in st.session_state.amenities:
                 try:
