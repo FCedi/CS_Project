@@ -174,6 +174,7 @@ if st.session_state.page == "input":
         parking = st.selectbox("Does the property include a parking space?", ["No", "Parking Outdoor", "Garage"])
 
         st.header("🏬 Amenities")
+        st.caption("The amenities will not influence the estimated rent. This will show what is close to your entered apartment.")
         amenity_options = ["Supermarket", "School", "Hospital", "Pharmacy", "Restaurant"]
         amenities = [a for a in amenity_options if st.checkbox(a, key=f"chk_{a}")]
         radius = st.slider("Search Radius in meters", 100, 3000, 500)
