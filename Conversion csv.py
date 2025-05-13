@@ -1,9 +1,9 @@
 import pandas as pd
 import re
 
-# Load raw old format file
-input_file = "zurich.xlsx"   # Change this to the city you want to process
-output_file = "zurich_cleaned.csv"  # Change to what the output should be (will be csv)
+# define input and output of the program
+input_file = "zurich.xlsx"   # Change this to the city you want to process, can be the raw .xlsx file
+output_file = "zurich_cleaned.csv"  # Change to what the output should be (needs to be csv file)
 
 # Read file
 df = pd.read_excel(input_file)
