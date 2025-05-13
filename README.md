@@ -1,4 +1,4 @@
-# 🏡 Swiss Real Estate Price Estimator
+# Swiss Real Estate Price Estimator
 
 This the CS Project of Group 07.10
 
@@ -6,7 +6,7 @@ This program provides you with a comparable rental price estimate for your apart
 it also enables you to locate key amenities around your new potential flat, and to calculate the distance to one key points of your choice (workplace/university ...)
 It uses machine learning based on historical rental listings to predict a price range (+- 10%) for your unit.
 
-## 🎯 Key Features
+## Key Features
 
 - Step-by-step guided interface
 - Enter property details:
@@ -19,7 +19,7 @@ It uses machine learning based on historical rental listings to predict a price 
 - Rental price range (+- 10%) and estimated exact price (bold and centered)
 - A key amenities features that enables you to locate point of interest arounf your potential new flat using overspeed api and openstreetmap
 
-## 🛠️ Installation
+## Installation
 
 ### Prerequisites
 
