@@ -289,6 +289,7 @@ if st.session_state.page == "result":
         "ZIP": float(st.session_state.zip_code) if st.session_state.zip_code else 0.0,
         "number_of_rooms": st.session_state.rooms,
         "square_meters": st.session_state.size,
+        "place_type": "Apartment",
         "Is_Renovated_or_New": renovated_flag,
         "Has_Parking": parking_flag,
         "Has_Outdoor_Space": outdoor_flag
