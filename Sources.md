@@ -25,13 +25,17 @@ For certain problems we asked ChatGPT for help, these where the cases we used it
 - Specific_Amenities_Finder.py
     - 
 - train_model_all_cities.py
-    - 
+    - As we wanted to detect different price influencing features in ceveral columns of the csv files, we asked ChatGPT to defin us a function to look for different keywords in defined columns. We asked: "Write a python function to search for different keyword groups in the rows char.1, char.2 and char.3" From this we got a custom function we integrated in our code.
+    ```
+    def detect_feature(row, keywords):
+    values = [str(row['char.1']).lower(), str(row['char.2']).lower(), str(row['char.3']).lower()]
+    return int(any(any(k in v for k in keywords) for v in values))
+    ```
 - Conversion csv.py
     - After filtering the scraped data (.xlsx files) by hand to have the information we needed to enter it in our training model it didn't work as we excepted. Because there where around 1800 lines of code to filter, we aked ChatGPT to write us a program to filter the .xlsx files and provide a cleaned up CSV file. We provided ChatGPT with the format we needed the CSV to be so we could enter it in our training model.
     In short, ChatGPT build Conversion csv.py based on the format we needed the CSV files to be for our training model.
-    - Certain elements of the Conversion csv program where reused in other parts of our project, these elements include but are not limited to:
+    - Certain elements of the Conversion csv program where reused in other parts of our project, these elements include:
         - `str.extract(r'(?:(\d+(?:\.\d+)?)\s*rooms?)?\s*•?\s*(\d+)\s*m²\s*•?\s*(.*)')` and `str.extract(r'^(.*),\s*(\d{4}\s+\w+.*)$')` to extract different elements conected to room number and size and also differnt address elements
         - `str.replace(r'[^\d.]', '', regex=True)` and `str.replace(r'\s+', ' ', regex=True)` to replace anything unwanted in a single cell
-
 
 ## Other Sources
