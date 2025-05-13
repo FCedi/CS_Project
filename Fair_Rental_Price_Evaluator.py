@@ -55,7 +55,7 @@ def get_location(address, zip_code, city, country='CH'):
     
     time.sleep(1)  # pause 1 sec to prevent crashes and too many requests
     
-    response = requests.get(url, headers={'User-Agent': 'MyRentalApp/1.0 (cedric.frutiger@startglobal.org)'}) # user-agent to prevent api crashes
+    response = requests.get(url, headers={'User-Agent': 'RentalApp/1.0 (cedric.frutiger@startglobal.org)'}) # user-agent to prevent api crashes
     if response.status_code != 200:
         return None, None
     data = response.json()
@@ -69,15 +69,21 @@ def get_amenity_elements(amenity, lat, lon, radius):
     if key in st.session_state:
         return st.session_state[key]
 
+    # on overpass supermarkets are taged as shops, but we want to display supermarkets
+    tag_key = "amenity"
+    if amenity.lower() == "supermarket":
+        tag_key = "shop"
+
     query = f"""
     [out:json];
     (
-      node["amenity"="{amenity.lower()}"](around:{radius},{lat},{lon});
-      way["amenity"="{amenity.lower()}"](around:{radius},{lat},{lon});
-      relation["amenity"="{amenity.lower()}"](around:{radius},{lat},{lon});
+      node["{tag_key}"="{amenity.lower()}"](around:{radius},{lat},{lon});
+      way["{tag_key}"="{amenity.lower()}"](around:{radius},{lat},{lon});
+      relation["{tag_key}"="{amenity.lower()}"](around:{radius},{lat},{lon});
     );
     out center;
     """
+
     try:
         response = requests.post("https://overpass-api.de/api/interpreter", data=query, timeout=30)
         response.raise_for_status()
