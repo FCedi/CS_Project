@@ -9,10 +9,9 @@ import os
 import matplotlib.pyplot as plt # For Diagrams
 import math
 from geopy.geocoders import Nominatim # For Amenities
-from geopy.distance import geodesic
+from geopy.distance import geodesic 
 import streamlit.components.v1 as components
-import time # helps to prevent API crashes
-import requests # 
+import time # helps to prevent API crashes 
 
 #Variables that always exist and prevent crashes when reloading the page at the wrong time
 if "page" not in st.session_state:
@@ -178,54 +177,9 @@ if st.session_state.page == "result":
     
     # Edit button to return to input page
     if st.button("🔄 Edit Property Details"):
+        st.session_state.page = "input"
+        st.rerun()
 
-        if st.session_state.page == "input":
-            st.session_state.page = "input"
-            st.title("Edit Property Details")
-
-        with st.form("property_form"):
-            st.header("📍 Address")
-            street = st.text_input("Street and House Number", value=st.session_state.address)
-            zip_code = st.text_input("ZIP Code", max_chars=4, value=st.session_state.zip_code)
-            city = st.text_input("City", value=st.session_state.city)
-
-            st.header("🏠 Property Details")
-            size = st.number_input("Property Size (m²)", min_value=10, max_value=1000, step=5, value=st.session_state.size or 100)
-            rooms = st.number_input("Number of Rooms", min_value=1.0, max_value=20.0, step=0.5, value=st.session_state.rooms or 3.0)
-            demanded_rent = st.number_input("Demanded Rent (CHF)", min_value=100, max_value=20000, value=st.session_state.demanded_rent or 1500)
-
-            st.header("✨ Features")
-            outdoor_space = st.selectbox("Outdoor Space", ["No", "Balcony", "Terrace", "Roof Terrace", "Garden"],
-                                        index=["No", "Balcony", "Terrace", "Roof Terrace", "Garden"].index(st.session_state.outdoor_space))
-            is_renovated = st.radio("Is the property new or recently renovated (last 5 years)?", ["Yes", "No"],
-                                    index=["Yes", "No"].index(st.session_state.is_renovated))
-            parking = st.selectbox("Does the property include a parking space?", ["No", "Parking Outdoor", "Garage"],
-                                index=["No", "Parking Outdoor", "Garage"].index(st.session_state.parking))
-
-            st.header("🏬 Amenities")
-            amenity_options = ["Supermarket", "School", "Hospital", "Pharmacy", "Restaurant"]
-            amenities = [a for a in amenity_options if st.checkbox(a, key=f"chk_{a}", value=a in st.session_state.amenities)]
-
-            radius = st.slider("Search Radius in meters", min_value=100, max_value=3000, step=100, value=st.session_state.radius)
-
-            submitted = st.form_submit_button("Estimate a Fair Rent")
-
-        if submitted:
-            # Save all inputs to session_state
-            st.session_state.address = street
-            st.session_state.zip_code = zip_code
-            st.session_state.city = city
-            st.session_state.size = size
-            st.session_state.rooms = rooms
-            st.session_state.demanded_rent = demanded_rent
-            st.session_state.outdoor_space = outdoor_space
-            st.session_state.is_renovated = is_renovated
-            st.session_state.parking = parking
-            st.session_state.amenities = amenities
-            st.session_state.radius = radius
-            st.session_state.page = "result"
-            st.rerun()
-    
     col1, col2 = st.columns(2)
 
     with col1:  # left side of the page
@@ -322,16 +276,15 @@ if st.session_state.page == "result":
     renovated_flag = 1 if st.session_state.is_renovated == "Yes" else 0
     parking_flag = 0
     if st.session_state.parking == "Parking Outdoor":
-        parking_flag = 1
+            parking_flag = 1
     elif st.session_state.parking == "Garage":
-        parking_flag = 2
-
-    # Create input DataFrame for prediction
+            parking_flag = 2
+    
+    # defins features for estimation and diagrams
     features = pd.DataFrame([{
         "ZIP": float(st.session_state.zip_code) if st.session_state.zip_code else 0.0,
         "number_of_rooms": st.session_state.rooms,
         "square_meters": st.session_state.size,
-        "place_type": "Apartment",
         "Is_Renovated_or_New": renovated_flag,
         "Has_Parking": parking_flag,
         "Has_Outdoor_Space": outdoor_flag
