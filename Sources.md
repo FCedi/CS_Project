@@ -39,7 +39,6 @@ For certain problems we asked ChatGPT for help, these where the cases we used it
         ],
         remainder='passthrough'
     )
-    ```
 - Conversion csv.py
     - After filtering the scraped data (.xlsx files) by hand to have the information we needed to enter it in our training model it didn't work as we excepted. Because there where around 1800 lines of code to filter, we aked ChatGPT to write us a program to filter the .xlsx files and provide a cleaned up CSV file. We provided ChatGPT with the format we needed the CSV to be so we could enter it in our training model.
     In short, ChatGPT build Conversion csv.py based on the format we needed the CSV files to be for our training model.
