@@ -34,10 +34,12 @@ For certain problems we asked ChatGPT for help, these where the cases we used it
     - After runing into problems when feeding our csv files into the RandomForrestRegressor because of unknown values, we entered the issue into ChatGPT. after some more inputs we got this function from ChatGPT to put before the RandomForrestRegressor avoid the error of unknown values
     ````
     preprocessor = ColumnTransformer(
-    transformers=[
-        ('cat', OneHotEncoder(handle_unknown='ignore'), ['place_type'])
-    ],
-    remainder='passthrough')
+        transformers=[
+            ('cat', OneHotEncoder(handle_unknown='ignore'), ['place_type'])
+        ],
+        remainder='passthrough'
+    )
+    ```
 - Conversion csv.py
     - After filtering the scraped data (.xlsx files) by hand to have the information we needed to enter it in our training model it didn't work as we excepted. Because there where around 1800 lines of code to filter, we aked ChatGPT to write us a program to filter the .xlsx files and provide a cleaned up CSV file. We provided ChatGPT with the format we needed the CSV to be so we could enter it in our training model.
     In short, ChatGPT build Conversion csv.py based on the format we needed the CSV files to be for our training model.
