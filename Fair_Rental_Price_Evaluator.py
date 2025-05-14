@@ -299,6 +299,7 @@ if st.session_state.page == "result":
             plt.xlabel("Actual Rent (CHF)")
             plt.ylabel("Predicted Rent (CHF)")
             plt.title("Predicted vs. Actual Rent Price")
+            plt.legend()
             st.pyplot(plt)
 
     lower_bound = int(estimated_price * 0.9)
