@@ -19,8 +19,8 @@ All Graphics we use are created from the the collected data, no external diagram
 
 For certain problems we asked ChatGPT for help, these where the cases we used it and what code implementations it lead to:
 - Fair_Rental_Price_Evaluator.py
-    - "when I submit the form and am directed to the result page, the results only show for a second and then start to "flicker". How can I prevent this?"
-        -> Led to the implementation of `st.session_state.` to save the entered values when swithcing between pages
+    - "when I submit the form and am directed to the result page, the results only show for a second and then start to "flicker". How can I prevent this?" ChatGPT's answer led to the implementation of `st.session_state.` to save the entered values when swithcing between pages
+    - We had crashes with the Openstreetmap API because of too many request and a subsequent block of my IP for any further requests, errors 111 and 403. We asked ChatGPT what permanent fix we can include into our code to further crash-proof our code. Trhough ChatGPT's answer we implemented a rate limiter with `time.sleep(1)` to reduce the request to 1 per second and a legitimate user-agent `response = requests.get(url, headers={'User-Agent': 'RentalApp/1.0 (cedric.frutiger@startglobal.org)'})` to avoid beeing refused.
     - 
 - Specific_Amenities_Finder.py
     - 

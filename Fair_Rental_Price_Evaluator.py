@@ -46,16 +46,15 @@ def load_model():
 
 model_pipeline = load_model()
 
-# OpenStreetMap API
-# gets latitude and longitude from address input
 @st.cache_data
+# gets apartment location and map from openstreetmap
 def get_location(address, zip_code, city, country='CH'):
     query = f"{address}, {zip_code} {city}, {country}"
     url = f"https://nominatim.openstreetmap.org/search?q={query}&format=json"
     
     time.sleep(1)  # pause 1 sec to prevent crashes and too many requests
     
-    response = requests.get(url, headers={'User-Agent': 'RentalApp/1.0 (cedric.frutiger@startglobal.org)'}) # user-agent to prevent api crashes
+    response = requests.get(url, headers={'User-Agent': 'streamlit_app (cedric.frutiger@startglobal.org)'}) # user-agent to prevent api crashes
     if response.status_code != 200:
         return None, None
     data = response.json()
@@ -63,13 +62,13 @@ def get_location(address, zip_code, city, country='CH'):
         return float(data[0]['lat']), float(data[0]['lon'])
     return None, None
 
-# helps with consistant amenities display
+# gets amenities and there location from overpass
 def get_amenity_elements(amenity, lat, lon, radius):
     key = f"amenity_data_{amenity.lower()}"
     if key in st.session_state:
         return st.session_state[key]
 
-    # Mapping of user tags to actual OSM tags
+    # changes of user tags to actual osm tags
     tag_mapping = {
         "supermarket": ("shop", "supermarket"),
         "school": ("amenity", "school"),
@@ -77,7 +76,7 @@ def get_amenity_elements(amenity, lat, lon, radius):
         "pharmacy": ("amenity", "pharmacy"),
         "restaurant": ("amenity", "restaurant")
     }
-
+    # fallback for not found amenities
     tag_key, tag_value = tag_mapping.get(amenity.lower(), ("amenity", amenity.lower()))
 
     query = f"""
@@ -98,7 +97,7 @@ def get_amenity_elements(amenity, lat, lon, radius):
         return elements
     except Exception as e:
         st.error(f"Failed to retrieve amenities for {amenity}: {e}")
-        return []
+    return []
 
 # Get average price per m2 per year from training csv files
 city_files = {
@@ -181,7 +180,7 @@ if st.session_state.page == "input":
 
         submitted = st.form_submit_button("Compare your Rent")
 
-        # Save data to session and go to result page
+    # Save data to session and go to result page
     if submitted:
         st.session_state.address = street
         st.session_state.zip_code = zip_code
@@ -292,7 +291,7 @@ if st.session_state.page == "result":
             import matplotlib.pyplot as plt
 
             plt.figure(figsize=(8, 6))
-            plt.scatter(y_test, y_pred, alpha=0.6, label='	Training Data Predictions')
+            plt.scatter(y_test, y_pred, alpha=0.6, label='Training Data Predictions')
             plt.plot([min(y_test), max(y_test)], [min(y_test), max(y_test)], 'r--', label='Ideal Prediction Line')
 
             # Add user point
@@ -300,7 +299,6 @@ if st.session_state.page == "result":
             plt.xlabel("Actual Rent (CHF)")
             plt.ylabel("Predicted Rent (CHF)")
             plt.title("Predicted vs. Actual Rent Price")
-            plt.legend()
             st.pyplot(plt)
 
     lower_bound = int(estimated_price * 0.9)
