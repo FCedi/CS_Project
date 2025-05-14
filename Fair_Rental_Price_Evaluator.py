@@ -305,9 +305,9 @@ if st.session_state.page == "result":
     lower_bound = int(estimated_price * 0.9)
     upper_bound = int(estimated_price * 1.1)
 
-    st.subheader("Estimated Price Range")
+    st.subheader("Comparable Price Range")
     st.write(f"CHF {lower_bound:,} - CHF {upper_bound:,}")
-    st.write(f"Estimated Price: **CHF {int(estimated_price):,}**")
+    st.write(f"Comparable Price: **CHF {int(estimated_price):,}**")
 
     col1, col2 = st.columns(2)
 
