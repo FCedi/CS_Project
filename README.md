@@ -1,25 +1,26 @@
 # Swiss Real Estate Price Estimator
 
-This the CS Project of Group 07.10
+This is the CS Project of Group 07.10
 
-This program provides you with a comparable rental price estimate for your apartment or house in **Geneva, Zürich, Lausanne, or St. Gallen**.
-it also enables you to locate key amenities around your new potential flat, and to calculate the distance to one key points of your choice (workplace/university ...)
-It uses machine learning based on historical rental listings to predict a price range (+- 10%) for your unit.
+This app gives you an overview if your rent is comparable to other available apartments in **Geneva, Zürich, Lausanne, or St. Gallen** according to key indicators such as size (m²), number of rooms, location (evaluated by Zip Code), outdoor space, if it's renovated/new and if there is a prking opportunity included. It also enables you to locate key amenities around your new potential flat, and calculates the distance to a key points of your choice such as a new place of workplace or your university. Our app uses machine learning based on historical rental listings to predict a rent range (+- 10%) for the entered apartment.
 
 ## Key Features
 
-- Step-by-step guided interface
-- Enter property details:
-  - Street address, ZIP, City
-  - Property size and number of rooms
-  - Outdoor space (balcony, terrace, roof terrace, garden, or none)
-  - Renovated or recently built flag
-  - Parking availability (garage, outdoor parking, or none)
-- Visual map of the property location
-- Rental price range (+- 10%) and estimated exact price (bold and centered)
-- A key amenities features that enables you to locate point of interest arounf your potential new flat using overspeed api and openstreetmap
+- A trained rent estimation model traind with ~1.800 listings from 4 cities (~450 each)
+- Inclusion of different features to estimate rent:
+  - Location (Zip Code)
+  - Apartment Size (in m²)
+  - Number of Rooms
+  - Outdoor Space
+  - Renovated/New
+  - Parking Availability
+- A bar plot comparing the annual price per m² from the entered apartment and the zip code our aparment is in.
+- A scatter plot displaying the entered apartment and the 100 outcomes of our RandomForrestRegression and the ideal prediction line.
+- A comparable rent estimation (±10%) for the entered apartment.
+- Visual map of the property location with selected amenities in a defined radius around the entered apartment.
+- A tool to see the distance beteween a selected amenities such as a place of work or university
 
-## Installation
+## Requirements to open, run or expand our program
 
 ### Prerequisites
 
