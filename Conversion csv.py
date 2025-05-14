@@ -43,4 +43,4 @@ clean_df['rent'] = pd.to_numeric(clean_df['rent'], errors='coerce')
 # Save cleaned CSV
 clean_df.to_csv(output_file, index=False)
 
-print(f"✅ Cleaned data saved to {output_file}")
+print(f"Cleaned data saved to {output_file}")
