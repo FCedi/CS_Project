@@ -129,7 +129,7 @@ if "page" not in st.session_state:
 
 # WELCOME PAGE
 if st.session_state.page == "welcome":
-    st.title("🏡 Fair Rental Price Evaluator")
+    st.title("Fair Rental Price Evaluator")
     
     # display on the welcome page
     st.write("""
@@ -156,24 +156,24 @@ if st.session_state.page == "input":
 
     with st.form("property_form"):
 
-        st.header("📍 Address")
+        st.header("Address")
         street = st.text_input("Street and House Number")
         zip_code = st.text_input("ZIP Code", max_chars=4)
         city = st.text_input("City")
         st.caption("Please write the city name the english way (NO Ä, Ü, Ö).")
 
-        st.header("🏠 Property Details")
+        st.header("Property Details")
         size = st.number_input("Property Size (m²)", min_value=10, max_value=1000, step=5, value=100)
         rooms = st.number_input("Number of Rooms", min_value=1.0, max_value=20.0, step=0.5, value=3.0)
         demanded_rent = st.number_input("Demanded Rent (CHF)", min_value=100, max_value=20000, value=1500)
         st.caption("Please enter the rent rounded in CHF.")
 
-        st.header("✨ Features")
+        st.header("Features")
         outdoor_space = st.selectbox("Outdoor Space", ["No", "Balcony", "Terrace", "Roof Terrace", "Garden"])
         is_renovated = st.radio("Is the property new or recently renovated (last 5 years)?", ["Yes", "No"])
         parking = st.selectbox("Does the property include a parking space?", ["No", "Parking Outdoor", "Garage"])
 
-        st.header("🏬 Amenities")
+        st.header("Amenities")
         st.caption("The amenities will not influence the estimated rent. This will show what is close to your entered apartment.")
         amenity_options = ["Supermarket", "School", "Hospital", "Pharmacy", "Restaurant"]
         amenities = [a for a in amenity_options if st.checkbox(a, key=f"chk_{a}")]
@@ -201,7 +201,7 @@ if st.session_state.page == "input":
 # RESULT PAGE
 if st.session_state.page == "result":
 
-    st.title("🏷️ Fair Estimated Rent")
+    st.title("Fair Estimated Rent")
 
     # Show entered data from input page
     st.subheader("Property Details")
@@ -214,7 +214,7 @@ if st.session_state.page == "result":
     st.write(f"**Parking:** {st.session_state.parking}")
     
     # Edit button to return to input page
-    if st.button("🔄 Edit Property Details"):
+    if st.button("Edit Property Details"):
         st.session_state.page = "input"
         st.rerun()
 
@@ -252,7 +252,7 @@ if st.session_state.page == "result":
 
             market_estimated_price = (market_price_m2_y / 12) * st.session_state.size
 
-            st.subheader("📦 Price per m² per Year Comparison")
+            st.subheader("Price per m² per Year Comparison")
 
             user_m2_price_year = (estimated_price / st.session_state.size) * 12
 
@@ -277,7 +277,7 @@ if st.session_state.page == "result":
 
     with col2: # right side display below the distande of the Amenities
         
-        st.subheader("💰Your Rent Compared to our Prediction")
+        st.subheader("Your Rent Compared to our Prediction")
 
         # Load diagnostics
         X_test, y_test, _ = joblib.load("model_diagnostics.pkl")
@@ -306,14 +306,14 @@ if st.session_state.page == "result":
     lower_bound = int(estimated_price * 0.9)
     upper_bound = int(estimated_price * 1.1)
 
-    st.subheader("💰 Estimated Price Range")
+    st.subheader("Estimated Price Range")
     st.write(f"CHF {lower_bound:,} - CHF {upper_bound:,}")
-    st.write(f" ➡️ Estimated Price: **CHF {int(estimated_price):,}**")
+    st.write(f"Estimated Price: **CHF {int(estimated_price):,}**")
 
     col1, col2 = st.columns(2)
 
     with col1:  # left side of the page
-        st.subheader("📍 Property Location & Nearby Amenities")
+        st.subheader("Property Location & Nearby Amenities")
 
         # Get location and show location
         lat, lon = get_location(st.session_state.address, st.session_state.zip_code, st.session_state.city)
@@ -345,7 +345,7 @@ if st.session_state.page == "result":
             st.warning("Could not locate your address on the map.")
 
     with col2:  # right side of the page 
-        st.subheader("🏬 Distance to selected Amenities")
+        st.subheader("Distance to selected Amenities")
 
         if lat and lon and st.session_state.amenities:
             total_displayed = 0  # Counter to limit overall output
