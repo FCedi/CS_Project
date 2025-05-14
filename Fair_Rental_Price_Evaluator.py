@@ -151,7 +151,7 @@ if st.session_state.page == "welcome":
 # INPUT PAGE
 if st.session_state.page == "input":
 
-    st.title("Enter Property Details")
+    st.title("Enter Apartment Details")
 
     with st.form("property_form"):
 
@@ -161,16 +161,16 @@ if st.session_state.page == "input":
         city = st.text_input("City")
         st.caption("Please write the city name the english way (NO Ä, Ü, Ö).")
 
-        st.header("Property Details")
-        size = st.number_input("Property Size (m²)", min_value=10, max_value=1000, step=5, value=100)
+        st.header("Apartment Details")
+        size = st.number_input("Apartment Size (m²)", min_value=10, max_value=1000, step=5, value=100)
         rooms = st.number_input("Number of Rooms", min_value=1.0, max_value=20.0, step=0.5, value=3.0)
         demanded_rent = st.number_input("Demanded Rent (CHF)", min_value=100, max_value=20000, value=1500)
         st.caption("Please enter the rent rounded in CHF.")
 
         st.header("Features")
         outdoor_space = st.selectbox("Outdoor Space", ["No", "Balcony", "Terrace", "Roof Terrace", "Garden"])
-        is_renovated = st.radio("Is the property new or recently renovated (last 5 years)?", ["Yes", "No"])
-        parking = st.selectbox("Does the property include a parking space?", ["No", "Parking Outdoor", "Garage"])
+        is_renovated = st.radio("Is the apartment new or recently renovated (last 5 years)?", ["Yes", "No"])
+        parking = st.selectbox("Does the apartment include a parking space?", ["No", "Parking Outdoor", "Garage"])
 
         st.header("Amenities")
         st.caption("The amenities will not influence the estimated rent. This will show what is close to your entered apartment.")
@@ -203,7 +203,7 @@ if st.session_state.page == "result":
     st.title("Fair Estimated Rent")
 
     # Show entered data from input page
-    st.subheader("Property Details")
+    st.subheader("Apartment Details")
     st.write(f"**Address:** {st.session_state.address}, {st.session_state.zip_code} {st.session_state.city}")
     st.write(f"**Size:** {st.session_state.size} m²")
     st.write(f"**Rooms:** {st.session_state.rooms}")
@@ -213,7 +213,7 @@ if st.session_state.page == "result":
     st.write(f"**Parking:** {st.session_state.parking}")
     
     # Edit button to return to input page
-    if st.button("Edit Property Details"):
+    if st.button("Edit Apartment Details"):
         st.session_state.page = "input"
         st.rerun()
 
@@ -255,7 +255,7 @@ if st.session_state.page == "result":
 
             user_m2_price_year = (estimated_price / st.session_state.size) * 12
 
-            labels = ['Your Property', 'Market Average in your City']
+            labels = ['Your Apartment', 'Market Average in your City']
             values = [user_m2_price_year, market_price_m2_y]
 
             fig, ax = plt.subplots(figsize=(8, 6))
@@ -311,7 +311,7 @@ if st.session_state.page == "result":
     col1, col2 = st.columns(2)
 
     with col1:  # left side of the page
-        st.subheader("Property Location & Nearby Amenities")
+        st.subheader("Apartment Location & Nearby Amenities")
 
         # Get location and show location
         lat, lon = get_location(st.session_state.address, st.session_state.zip_code, st.session_state.city)
@@ -320,7 +320,7 @@ if st.session_state.page == "result":
             m = folium.Map(location=[lat, lon], zoom_start=15)
             folium.Marker([
                 lat, lon
-            ], tooltip="Your Property", icon=folium.Icon(color="blue", icon="home", prefix='fa')).add_to(m)
+            ], tooltip="Your Apartment", icon=folium.Icon(color="blue", icon="home", prefix='fa')).add_to(m)
 
             # Display amenities
             geolocator = Nominatim(user_agent='streamlit_app')
@@ -375,6 +375,6 @@ if st.session_state.page == "result":
                     st.error(f"Error retrieving {amenity.title()}: {e}")
         
     # Option for new entry, goes back to input page
-    if st.button("Estimate Another Property"):
+    if st.button("Estimate Another Apartment"):
         st.session_state.page = "input"
         st.rerun()
