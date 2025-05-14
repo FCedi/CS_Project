@@ -18,30 +18,33 @@ This app gives you an overview if your rent is comparable to other available apa
 - A scatter plot displaying the entered apartment and the 100 outcomes of our RandomForrestRegression and the ideal prediction line.
 - A comparable rent estimation (±10%) for the entered apartment.
 - Visual map of the property location with selected amenities in a defined radius around the entered apartment.
-- A tool to see the distance beteween a selected amenities such as a place of work or university
+- A tool to see the distance beteween a spesific amenities such as a place of work or university
 
-## Requirements to open, run or expand our program
+## Requirements to Open, Run or Expand our App
 
-### Prerequisites
+### Open the App
 
-- Python 3.8+ recommended
-- Pip (Python package installer)
+Open our app through this [link](https://fairrentalpriceevaluator.streamlit.app). Here the app is hosted on one of our devices.
 
-### 1. Clone or download the project
+### Run the App
 
-```bash
-git clone <your-repository-url>
-cd CS_Project-07.10
-```
+Download the CS_Projects-07.10.zip file and instal it on your local device and run the streamlit app from there.
+To make sure the app can run on your local device, make sure the `requirements.txt` are instaled before opening/creating the local streamlit app.
 
-### 2. Install required Python packages
+### Expans our App
 
-```bash
-pip install -r requirements.txt
-```
+If you collected more data to train our model and want to include it in our `price_estimator.pkl` and `model_diagnostics.pkl`, you have everything at your disposal to do so. There is just one requirement, you need the scraped data as an .xlsx file, otherwies our `Conversion csv.py` program won't work.
 
-### 3. Run the app
+#### 1. Make the Correct CSV Files
 
-```bash
-streamlit run app.py
-```
+Run your .xlsx file through our `Conversion csv.py` program to recive a csv file which is structured in a way our other programs can gather the correct data.
+
+#### 2. Create new .pkl Files
+
+First you need to delete the current `price_estimator.pkl` and `model_diagnostics.pkl` files to make room for the new ones. After this, you need to add the name of the new training csv file to `city_files = [`HERE`]` in the `train_model_all_cities.py` program without removing any of the current files.
+
+Afterwards you need to instal the `requirements.txt` file on your device before runing the `train_model_all_cities.py` on your local device to create new and improved versions of the `price_estimator.pkl` and `model_diagnostics.pkl` files.
+
+#### 3. Run the Streamilt App
+
+Once you created the new `price_estimator.pkl` and `model_diagnostics.pkl` files and saved them in the same place as the other files you can reboot or create a new version of the streamlit app using this `Fair_Rental_Price_Evaluator.py` file as the main file path. `Fair_Rental_Price_Evaluator.py` will automaticly use the new `price_estimator.pkl` and `model_diagnostics.pkl` files, there is no requirement to chance any code.
