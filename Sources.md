@@ -18,13 +18,13 @@ All Graphics we use are created from the the collected data, no external diagram
 ## ChatGPT
 
 For certain problems we asked ChatGPT for help, these where the cases we used it and what code implementations it lead to:
-- Fair_Rental_Price_Evaluator.py
+- *Fair_Rental_Price_Evaluator.py*
     - "when I submit the form and am directed to the result page, the results only show for a second and then start to "flicker". How can I prevent this?" ChatGPT's answer led to the implementation of `st.session_state.` to save the entered values when swithcing between pages
     - We had crashes with the Openstreetmap API because of too many request and a subsequent block of my IP for any further requests, errors 111 and 403. We asked ChatGPT what permanent fix we can include into our code to further crash-proof our code. Trhough ChatGPT's answer we implemented a rate limiter with `time.sleep(1)` to reduce the request to 1 per second and a legitimate user-agent `response = requests.get(url, headers={'User-Agent': 'RentalApp/1.0 (cedric.frutiger@startglobal.org)'})` to avoid beeing refused.
     - 
-- Specific_Amenities_Finder.py
+- *Specific_Amenities_Finder.py*
     - 
-- train_model_all_cities.py
+- *train_model_all_cities.py*
     - As we wanted to detect different price influencing features in ceveral columns of the csv files, we asked ChatGPT to defin us a function to look for different keywords in defined columns. We asked: "Write a python function to search for different keyword groups in the rows char.1, char.2 and char.3" From this we got a custom function we integrated in our code. We could define different keywords (`xy_keywords`) and replace `keywords` when recaling the function to detect for these keywords in the defined rows
     ```
     def detect_feature(row, keywords):
@@ -39,7 +39,7 @@ For certain problems we asked ChatGPT for help, these where the cases we used it
         ],
         remainder='passthrough'
     )
-- Conversion csv.py
+- *Conversion csv.py*
     - After filtering the scraped data (.xlsx files) by hand to have the information we needed to enter it in our training model it didn't work as we excepted. Because there where around 1800 lines of code to filter, we aked ChatGPT to write us a program to filter the .xlsx files and provide a cleaned up CSV file. We provided ChatGPT with the format we needed the CSV to be so we could enter it in our training model.
     In short, ChatGPT build Conversion csv.py based on the format we needed the CSV files to be for our training model.
     - Certain elements of the Conversion csv program where reused in other parts of our project, these elements include:
@@ -48,5 +48,5 @@ For certain problems we asked ChatGPT for help, these where the cases we used it
 
 ## Other Sources
 
-- train_model_all_cities.py
+- *train_model_all_cities.py*
     - To correctly implement the RandomForrestRegressor, we used the guide from [geeksforgeeks.org](https://www.geeksforgeeks.org/random-forest-regression-in-python/). this heled us to use the correct Parameters.
