@@ -1,4 +1,4 @@
-# Swiss Real Estate Price Estimator
+# Fair Rental Price Evaluator
 
 This is the CS Project of Group 07.10
 
