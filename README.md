@@ -37,11 +37,11 @@ If you collected more data to train our model and want to include it in our `pri
 
 #### 1. Make the Correct CSV Files
 
-Run your .xlsx file through our `Conversion csv.py` program to recive a csv file which is structured in a way our other programs can gather the correct data.
+Run your .xlsx file through our `Conversion csv.py` program to recive a csv file which is structured in a way our other programs can gather the correct data. For this you need to change the input and output file (Ln 5&6) in the `Conversion csv.py` program.
 
 #### 2. Create new .pkl Files
 
-First you need to delete the current `price_estimator.pkl` and `model_diagnostics.pkl` files to make room for the new ones. After this, you need to add the name of the new training csv file to `city_files = [`HERE`]` in the `train_model_all_cities.py` program without removing any of the current files.
+First you need to delete the current `price_estimator.pkl` and `model_diagnostics.pkl` files to make room for the new ones. After this, you need to add the name of the new training csv file to `city_files = [`HERE`]`(Ln 12) in the `train_model_all_cities.py` program without removing any of the current files.
 
 Afterwards you need to instal the `requirements.txt` file on your device before runing the `train_model_all_cities.py` on your local device to create new and improved versions of the `price_estimator.pkl` and `model_diagnostics.pkl` files.
 
