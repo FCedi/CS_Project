@@ -28,7 +28,7 @@ Open our app through this [link](https://fairrentalpriceevaluator.streamlit.app)
 
 ### Run the App
 
-Download the CS_Projects-07.10.zip file and install it on your local device and run the streamlit app from there.
+Download the CS_Projects-07.10.zip file or clone the github repository through accessing the app through the link above and install it on your local device and run the streamlit app from there.
 To make sure the app can run on your local device, make sure the `requirements.txt` are installed before opening/creating the local streamlit app.
 
 ### Expand our App
