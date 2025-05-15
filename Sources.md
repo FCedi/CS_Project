@@ -39,6 +39,14 @@ For certain problems we asked ChatGPT for help, these where the cases we used it
         ],
         remainder='passthrough'
     )
+- We tried to use a list that simply matched the string inputs for the amenities selection, but when sent through the API the result were incorrect and inconsistent, we didnt understand why. Chatgpt gave us the answer by creating a dictionnary assigning user-friendly names to the actual feature type in overpass, since amenities are not always named simply by their common name.
+  # changes of user tags to actual osm tags
+    tag_mapping = {
+        "supermarket": ("shop", "supermarket"),
+        "school": ("amenity", "school"),
+        "hospital": ("amenity", "hospital"),
+        "pharmacy": ("amenity", "pharmacy"),
+        "restaurant": ("amenity", "restaurant")
 - **Conversion csv.py**
     - After filtering the scraped data (.xlsx files) by hand to have the information we needed to enter it in our training model it didn't work as we excepted. Because there where around 1800 lines of code to filter, we aked ChatGPT to write us a program to filter the .xlsx files and provide a cleaned up CSV file. We provided ChatGPT with the format we needed the CSV to be so we could enter it in our training model.
     In short, ChatGPT build Conversion csv.py based on the format we needed the CSV files to be for our training model.
