@@ -33,7 +33,7 @@ For certain problems we asked ChatGPT for help, these where the cases we used it
             "pharmacy": ("amenity", "pharmacy"),
             "restaurant": ("amenity", "restaurant")
             }
-        ```
+            
 - **train_model_all_cities.py**
     - As we wanted to detect different price influencing features in ceveral columns of the csv files, we asked ChatGPT to defin us a function to look for different keywords in defined columns. We asked: "Write a python function to search for different keyword groups in the rows char.1, char.2 and char.3" From this we got a custom function we integrated in our code. We could define different keywords (`xy_keywords`) and replace `keywords` when recaling the function to detect for these keywords in the defined rows
     ```
