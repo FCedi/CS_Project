@@ -51,8 +51,8 @@ Once you created the new `price_estimator.pkl` and `model_diagnostics.pkl` files
 
 ## Limitations
 
-Due to the limited experience and knowledge in coding, our app has it's limitations. Some of them are because we use free API's, which despite using a timer and user-agent to access them, there are still limitations with requests in a short amount of time from the same IP address.
+Due to the limited experience and knowledge in coding, our app has its limitations. Some of them are because we use free API's, which, despite using a timer and user-agent to access them, there are still have limitations with requests in a short amount of time from the same IP address.
 
-Another  limitation we encountered was related to the spesific amenities finder page. The sometimes there is an issue with the address text fields, as in the german letter ä, ö and ü work and sometimes they don't. Even the adaptations, ae, oe and ue don't work for the address.
+Another limitation we encountered was related to the specific amenities finder page. Sometimes, there is an issue with the address text fields, as in the German letters ä, ö, and ü, which sometimes work and sometimes don't. Even the adaptations ae, oe, and ue don't work for the address.
 
 A very obvious limitation is the amount of data the model is trained with. Currentls we use ~450 rent listings from Geneve, Lausann, St. Gallen and Zurich. There are ways to get and use more data, but for the scope of this project ~1800 listings is enough.
