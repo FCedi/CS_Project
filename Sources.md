@@ -18,38 +18,36 @@ All Graphics we use are created from the the collected data, no external diagram
 ## ChatGPT
 
 For certain problems we asked ChatGPT for help, these where the cases we used it and what code implementations it lead to:
+
 - **Fair_Rental_Price_Evaluator.py**
     - "when I submit the form and am directed to the result page, the results only show for a second and then start to "flicker". How can I prevent this?" ChatGPT's answer led to the implementation of `st.session_state.` to save the entered values when swithcing between pages
     - We had crashes with the Openstreetmap API because of too many request and a subsequent block of my IP for any further requests, errors 111 and 403. We asked ChatGPT what permanent fix we can include into our code to further crash-proof our code. Trhough ChatGPT's answer we implemented a rate limiter with `time.sleep(1)` to reduce the request to 1 per second and a legitimate user-agent `response = requests.get(url, headers={'User-Agent': 'RentalApp/1.0 (cedric.frutiger@startglobal.org)'})` to avoid beeing refused.
     
 - **Specific_Amenities_Finder.py**
     - We tried to use a list that simply matched the string inputs for the amenities selection, but when sent through the API the result were incorrect and inconsistent, we didnt understand why. Chatgpt gave us the answer by creating a dictionnary assigning user-friendly names to the actual feature type in overpass, since amenities are not always named simply by their common name.
-    ````
-    # changes of user tags to actual osm tags
-    tag_mapping = {
-        "supermarket": ("shop", "supermarket"),
-        "school": ("amenity", "school"),
-        "hospital": ("amenity", "hospital"),
-        "pharmacy": ("amenity", "pharmacy"),
-        "restaurant": ("amenity", "restaurant")
-        }
-
+        ```
+        # changes of user tags to actual osm tags
+        tag_mapping = {
+            "supermarket": ("shop", "supermarket"),
+            "school": ("amenity", "school"),
+            "hospital": ("amenity", "hospital"),
+            "pharmacy": ("amenity", "pharmacy"),
+            "restaurant": ("amenity", "restaurant")
+            }
 - **train_model_all_cities.py**
     - As we wanted to detect different price influencing features in ceveral columns of the csv files, we asked ChatGPT to defin us a function to look for different keywords in defined columns. We asked: "Write a python function to search for different keyword groups in the rows char.1, char.2 and char.3" From this we got a custom function we integrated in our code. We could define different keywords (`xy_keywords`) and replace `keywords` when recaling the function to detect for these keywords in the defined rows
-    ```
-    def detect_feature(row, keywords):
-        values = [str(row['char.1']).lower(), str(row['char.2']).lower(), str(row['char.3']).lower()]
-        return int(any(any(k in v for k in keywords) for v in values))
-    
+        ```
+        def detect_feature(row, keywords):
+            values = [str(row['char.1']).lower(), str(row['char.2']).lower(), str(row['char.3']).lower()]
+            return int(any(any(k in v for k in keywords) for v in values))
     - After runing into problems when feeding our csv files into the RandomForrestRegressor because of unknown values, we entered the issue into ChatGPT. after some more inputs we got this function from ChatGPT to put before the RandomForrestRegressor avoid the error of unknown values
-    ````
-    preprocessor = ColumnTransformer(
-        transformers=[
-            ('cat', OneHotEncoder(handle_unknown='ignore'), ['place_type'])
-        ],
-        remainder='passthrough'
-    )
-
+        ```
+        preprocessor = ColumnTransformer(
+            transformers=[
+                ('cat', OneHotEncoder(handle_unknown='ignore'), ['place_type'])
+            ],
+            remainder='passthrough'
+        )
 - **Conversion csv.py**
     - After filtering the scraped data (.xlsx files) by hand to have the information we needed to enter it in our training model it didn't work as we excepted. Because there where around 1800 lines of code to filter, we aked ChatGPT to write us a program to filter the .xlsx files and provide a cleaned up CSV file. We provided ChatGPT with the format we needed the CSV to be so we could enter it in our training model.
     In short, ChatGPT build Conversion csv.py based on the format we needed the CSV files to be for our training model.
