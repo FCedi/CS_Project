@@ -40,7 +40,7 @@ For certain problems we asked ChatGPT for help, these where the cases we used it
     def detect_feature(row, keywords):
         values = [str(row['char.1']).lower(), str(row['char.2']).lower(), str(row['char.3']).lower()]
         return int(any(any(k in v for k in keywords) for v in values))
-    ```
+    
     - After runing into problems when feeding our csv files into the RandomForrestRegressor because of unknown values, we entered the issue into ChatGPT. after some more inputs we got this function from ChatGPT to put before the RandomForrestRegressor avoid the error of unknown values
     ````
     preprocessor = ColumnTransformer(
