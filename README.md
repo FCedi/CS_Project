@@ -48,3 +48,11 @@ Afterwards you need to instal the `requirements.txt` file on your device before 
 #### 3. Run the Streamlit App
 
 Once you created the new `price_estimator.pkl` and `model_diagnostics.pkl` files and saved them in the same place as the other files you can reboot or create a new version of the streamlit app using this `Fair_Rental_Price_Evaluator.py` file as the main file path. `Fair_Rental_Price_Evaluator.py` will automatically use the new `price_estimator.pkl` and `model_diagnostics.pkl` files, there is no requirement to change any code.
+
+## Limitations
+
+Due to the limited experience and knowledge in coding, our app has it's limitations. Some of them are because we use free API's, which despite using a timer and user-agent to access them, there are still limitations with requests in a short amount of time from the same IP address.
+
+Another  limitation we encountered was related to the spesific amenities finder page. The sometimes there is an issue with the address text fields, as in the german letter ä, ö and ü work and sometimes they don't. Even the adaptations, ae, oe and ue don't work for the address.
+
+A very obvious limitation is the amount of data the model is trained with. Currentls we use ~450 rent listings from Geneve, Lausann, St. Gallen and Zurich. There are ways to get and use more data, but for the scope of this project ~1800 listings is enough.
